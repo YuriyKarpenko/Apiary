@@ -52,13 +52,17 @@ CREATE  TABLE  IF NOT EXISTS [main].[Beehive] (
 	[Id]		INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL, 
 	[Name]		VARCHAR(50) NOT NULL,	--	Название (№)
 
-	[Address]	VARCHAR(50),			--	Адрес
-	[Comment]	VARCHAR(255),			--	Коментарий
+	[Address]	VARCHAR(50) NULL,		--	Адрес
+	[Comment]	VARCHAR(255) NULL,		--	Коментарий
 
 	[Created]	DATETIME NOT NULL	DEFAULT CURRENT_TIMESTAMP, 
 	[Modified]	DATETIME NOT NULL	DEFAULT CURRENT_TIMESTAMP, 
 	[Hide]		BOOL NOT NULL DEFAULT 0
 	)
+GO
+INSERT INTO [main].[Beehive] ([Name]) VALUES ('Улей 1');
+INSERT INTO [main].[Beehive] ([Name]) VALUES ('Улей 2');
+INSERT INTO [main].[Beehive] ([Name]) VALUES ('Улей 3');
 GO
 
 --	Семья	--------------------------------------------------------------------------------------------------------------------

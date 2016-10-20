@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="Apiary.V.V_SelfList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+
+			 xmlns:data="clr-namespace:Apiary.Data;assembly=Apiary.Data" 
+			 xmlns:data_m="clr-namespace:Apiary.Data.Model;assembly=Apiary.Data" 
+			 xmlns:it_wpf="clr-namespace:IT.WPF;assembly=IT" 
+			 xmlns:v="clr-namespace:Apiary.V" 
+			 xmlns:vm="clr-namespace:Apiary.VM" 
+
+			 mc:Ignorable="d" 
+             d:DesignHeight="200" d:DesignWidth="300">
+	<UserControl.Resources>
+		<DataTemplate DataType="{x:Type RoutedUICommand}">
+			<Button Style="{StaticResource cmd_v}" Command="{Binding .}" Content="{Binding . }"/>
+		</DataTemplate>
+
+		<DataTemplate DataType="{x:Type data_m:M_Beehive}">
+			<TextBlock Text="{Binding Name}"/>
+		</DataTemplate>
+		
+	</UserControl.Resources>
+	
+    <Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="auto"/>
+			<ColumnDefinition Width="5"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+
+		<DockPanel>
+
+			<StackPanel DockPanel.Dock="Top" Name="SelfTop">
+				<TextBlock DockPanel.Dock="Left" Text="{Binding SelfCaption}"/>
+				<ComboBox ItemsSource="{Binding SelfList.List}" SelectedItem="{Binding SelfList.SelectedItem}" MinWidth="100"/>
+			</StackPanel>
+
+			<!--<ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding SelfFooter}" Name="SelfFooter"/>-->
+			<WrapPanel DockPanel.Dock="Bottom" DataContext="{Binding SelfFooter}" Name="SelfFooter"/>
+
+			<v:UC_PropertyItem DataContext="{Binding SelfProperty}" x:Name="SelfContext"/>
+			
+		</DockPanel>
+
+		<GridSplitter Grid.Column="1" />
+
+		<DockPanel Grid.Column="2" >
+			<ToolBar DockPanel.Dock="Top">
+				<Button Style="{StaticResource cmd_h}" Command="Refresh" Content="{StaticResource img_Refresh}"/>
+				<Separator/>
+				<Button Style="{StaticResource cmd_h}" Command="New" Content="{StaticResource img_Plus}"/>
+				<Button Style="{StaticResource cmd_h}" Command="Delete" Content="{StaticResource img_Cancel}"/>
+				<Button Style="{StaticResource cmd_h}" Command="v:Commands.Edit" Content="{StaticResource img_Edit}"/>
+				<!--<Button Style="{StaticResource cmd_h}" Command="Save" Content="{StaticResource img_Save}"/>-->
+			</ToolBar>
+			
+			<v:UC_ListView DataContext="{Binding Content}" x:Name="GlobalContext"/>
+			<!--<ContentControl Grid.Column="2" DataContext="{Binding Content}" Name="GlobalContext"/>-->
+		</DockPanel>
+		
+	</Grid>
+</UserControl>

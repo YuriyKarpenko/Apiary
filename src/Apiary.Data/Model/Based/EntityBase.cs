@@ -8,33 +8,40 @@ namespace Apiary.Data
 	public interface IEntityBase
 	{
 		[Key, Editable(false), Browsable(false)]
+		[Display(AutoGenerateField = false, Order = -100)]
 #if GUID
 		Guid Id { get; set; }
 #else
 		long Id { get; set; }
 #endif
 
+		[Browsable(false)]
 		DateTime Created { get; set; }
 
+		[Browsable(false)]
 		DateTime Modified { get; set; }
 
+		[Display(AutoGenerateField = true, Name = "Сктыть", Order = 100)]
+		[Browsable(true)]
 		bool Hide { get; set; }
 
 
+		[Browsable(false)]
 		bool IsNew { get; }
 	}
 }
 
+#if GUID
+#else
+#endif
 namespace Apiary.Data.Model
 {
 	[DebuggerDisplay("{Id} c:{Created} m:{Modified} h:{Hide}")]
 	public abstract class EntityBase : IEntityBase
 	{
-#if GUID
-#else
-#endif
 		//[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		[Key, Editable(false), Browsable(false)]
+		[Display(AutoGenerateField = false, Order = -100)]
 #if GUID
 		public Guid Id { get; set; }
 #else

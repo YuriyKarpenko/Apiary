@@ -42,26 +42,98 @@ namespace Apiary.V
 			}
 		}
 
-		///// <summary>
-		///// Properties of value for show
-		///// </summary>
-		//public static readonly DependencyProperty PropertyGrid_PropertiesProperty = DependencyProperty.RegisterAttached(
-		//	"PropertyGrid_Properties", typeof(IEnumerable<MemberInfo>), typeof(GridBehaviour), new PropertyMetadata(null, PropertyGrid_PropertiesChangedCallback));
+		/// <summary>
+		/// Properties of value for show
+		/// </summary>
+#if dic
+		public static readonly DependencyProperty PropertyGrid_PropertiesProperty = DependencyProperty.RegisterAttached(
+			"PropertyGrid_Properties", typeof(IEnumerable<KeyValuePair<string, object>>), typeof(GridBehaviour), new PropertyMetadata(null, PropertyGrid_PropertiesChangedCallback));
 
-		//public static IEnumerable<MemberInfo> GetPropertyGrid_Properties(DependencyObject obj)
-		//{
-		//	return (IEnumerable<MemberInfo>)obj.GetValue(PropertyGrid_PropertiesProperty);
-		//}
+		public static IEnumerable<KeyValuePair<string, object>> GetPropertyGrid_Properties(DependencyObject obj)
+		{
+			return (IEnumerable<KeyValuePair<string, object>>)obj.GetValue(PropertyGrid_PropertiesProperty);
+		}
 
-		//public static void SetPropertyGrid_Properties(DependencyObject obj, IEnumerable<MemberInfo> value)
-		//{
-		//	obj.SetValue(PropertyGrid_PropertiesProperty, value);
-		//}
+		public static void SetPropertyGrid_Properties(DependencyObject obj, IEnumerable<KeyValuePair<string, object>> value)
+		{
+			obj.SetValue(PropertyGrid_PropertiesProperty, value);
+		}
 
-		//static void PropertyGrid_PropertiesChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		//{
+		static void PropertyGrid_PropertiesChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			var gr = d as Grid;
+			var value = e.NewValue as IEnumerable<KeyValuePair<string, object>>;
+			if(gr != null && value != null)
+			{
+				InitGrid(gr, value);
+			}
+		}
+		private static void InitGrid(Grid gr, IEnumerable<KeyValuePair<string, object>> props)
+		{
+			InitGridBase(gr, row =>
+			{
+				if (props != null)
+				{
+					var t = typeof(KeyValuePair<string, object>);
+					foreach (var pi in props)
+					{
+						gr.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
+						gr.Insert(new TextBlock() { Text = pi.Key + " :" }, 0, row);
+						gr.Insert(GenerateControl(t.GetProperty("Value")), 2, row);
+						row++;
+					}
+				}
+				return row;
+			});
+		}
 
-		//}
+#else
+		public static readonly DependencyProperty PropertyGrid_PropertiesProperty = DependencyProperty.RegisterAttached(
+			"PropertyGrid_Properties", typeof(IEnumerable<object>), typeof(GridBehaviour), new PropertyMetadata(null, PropertyGrid_PropertiesChangedCallback));
+
+		public static IEnumerable<object> GetPropertyGrid_Properties(DependencyObject obj)
+		{
+			return (IEnumerable<object>)obj.GetValue(PropertyGrid_PropertiesProperty);
+		}
+
+		public static void SetPropertyGrid_Properties(DependencyObject obj, IEnumerable<object> value)
+		{
+			obj.SetValue(PropertyGrid_PropertiesProperty, value);
+		}
+
+		static void PropertyGrid_PropertiesChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			var gr = d as Grid;
+			var value = e.NewValue as IEnumerable<object>;
+			if(gr != null && value != null)
+			{
+				InitGrid(gr, value);
+			}
+		}
+		private static void InitGrid(Grid gr, IEnumerable<object> props)
+		{
+			InitGridBase(gr, row =>
+			{
+				if (props != null)
+				{
+					//var t = typeof(VM.IPropertyRecord<object>);
+					foreach (var prop in props)
+					{
+						var piKey = prop.GetType().GetProperty("Key");
+						var piVal = prop.GetType().GetProperty("Value");
+						gr.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
+						gr.Insert(new TextBlock() { Text = piKey.GetValue(prop) + " :" }, 0, row);
+						var ctrl = GenerateControl(piVal);
+						ctrl.DataContext = prop;
+						gr.Insert(ctrl, 2, row);
+						row++;
+					}
+				}
+				return row;
+			});
+		}
+
+#endif
 
 
 
@@ -106,7 +178,26 @@ namespace Apiary.V
 			gr.RowDefinitions.Clear();
 			gr.Children.Clear();
 		}
+
 		private static void InitGrid(Grid gr, IEnumerable<PropertyInfo> props)
+		{
+			InitGridBase(gr, row =>
+			{
+				if (props != null)
+				{
+					foreach (var pi in props)
+					{
+						gr.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
+						gr.Insert(new TextBlock() { Text = pi.GetNameFromAttributes(pi.Name) + " :" }, 0, row);
+						gr.Insert(GenerateControl(pi), 2, row);
+						row++;
+					}
+				}
+				return row;
+			});
+		}
+
+		private static void InitGridBase(Grid gr, Func<int, int> generateRows)
 		{
 			if (gr != null)
 			{
@@ -123,22 +214,14 @@ namespace Apiary.V
 				var spliter = new GridSplitter();
 				gr.Insert(spliter, 1, 0);
 
-				var row = 1;
-				if (props != null)
-				{
-					foreach (var pi in props)
-					{
-						gr.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
-						gr.Insert(new TextBlock() { Text = pi.GetNameFromAttributes(pi.Name) + " :" }, 0, row);
-						gr.Insert(GenerateControl(pi), 2, row);
-						row++;
-					}
-				}
+				var row = generateRows(1);
 
 				gr.RowDefinitions.Add(new RowDefinition());
 				Grid.SetRowSpan(spliter, row);
 			}
 		}
+
+
 		private static void Insert(this Grid gr, UIElement el, int col, int row)
 		{
 			if (gr != null && el != null)
@@ -148,13 +231,13 @@ namespace Apiary.V
 				gr.Children.Add(el);
 			}
 		}
-		private static UIElement GenerateControl(PropertyInfo pi)
+		private static FrameworkElement GenerateControl(PropertyInfo pi)
 		{
 			var isEnabled = pi?.CanWrite ?? pi.GetAttributeValue<EditableAttribute, bool>(i => i.AllowEdit, true);
 			FrameworkElement res = null;
 			LookupBindingPropertiesAttribute lookUp = pi.DeclaringType
 				.GetCustomAttributes<LookupBindingPropertiesAttribute>()
-				?.FirstOrDefault(i => i.LookupMember == pi.Name);//"ComboBox", "Name", "Id", "BeehiveId")]
+				?.FirstOrDefault(i => i.LookupMember == pi.Name);
 
 			if(lookUp != null)
 			{
@@ -191,6 +274,7 @@ namespace Apiary.V
 				case "int64":
 				case "long":
 				case "string":
+				case "object":
 					res = new TextBox();
 					res.SetBinding(TextBox.TextProperty, new Binding(pi.Name) { Mode = pi.CanWrite ? BindingMode.TwoWay : BindingMode.OneWay });
 					break;

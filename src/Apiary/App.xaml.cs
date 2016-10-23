@@ -22,7 +22,7 @@ namespace Apiary
 			Logger.Include_Ip = false;
 			Logger.Include_ThreadId = false;
 #if DEBUG
-			Logger.MinLevel = TraceLevel.Verbose;
+			Logger.MinLevel = TraceLevel.Info;
 #else
 			Logger.MinLevel = TraceLevel.Warning;
 #endif

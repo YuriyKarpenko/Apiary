@@ -115,6 +115,21 @@ namespace Apiary
 
 		#region family
 
+		public M.M_Family Get_Family(long id)
+		{
+			this.Debug("()");
+			try
+			{
+				return this.db.S_Family.R_Family.Get(id).ToModel();
+			}
+			catch (Exception ex)
+			{
+				this.Error(ex, "()");
+				throw;
+			}
+			return null;
+		}
+
 		//public M.M_Family Get_FamilyByBeehive(IM_Beehive beehive)
 		//{
 		//	this.Debug("()");

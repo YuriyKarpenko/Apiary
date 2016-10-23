@@ -12,36 +12,23 @@ namespace Apiary.VM
 {
 	class VM_BaseDb : VM_Base
 	{
-		protected readonly DbProvider db = DbProvider.Instance;
+		protected static DbProvider Db = DbProvider.Instance;
+		protected readonly DbProvider db = Db;
 
-		//public string Caption { get; private set; }
 		public object Content { get; private set; }
 
 
-		//public VM_BaseDb(string title = null)
-		//{
-		//	this.Caption_Set(title // ?? Ap.AppCaption
-		//		);
-		//}
-
-
-		//protected virtual void Caption_Set(string caption)
-		//{
-		//	this.Caption = caption;
-		//	this.OnPropertyChanged(nameof(this.Caption));
-		//}
 		protected virtual void Content_Set(object content)
 		{
 			this.Content = content;
 			this.OnPropertyChanged(nameof(this.Content));
 		}
-
 	}
 
 	class VM_BaseEdit<T> : VM_BaseDb 
 	{
 		public CM_PropertyItem<T> Properties { get; protected set; }
-		public T Value { get; protected set; }
+		//public T Value { get; protected set; }
 
 
 		protected VM_BaseEdit() { }
@@ -51,7 +38,7 @@ namespace Apiary.VM
 		}
 		public VM_BaseEdit(T value)
 		{
-			this.Value = value;
+			this.Properties_Set(new VM.CM_PropertyItem<T>(value));
 		}
 
 
@@ -60,13 +47,10 @@ namespace Apiary.VM
 			this.Properties = value;
 			this.OnPropertyChanged(nameof(this.Properties));
 		}
-
 	}
 
 	class VM_BaseEditHierarchy<TMaster, TDetail> : VM_BaseEdit<TDetail>
 	{
-		private Action<TMaster> onSelectMaster = null;
-
 		/// <summary>
 		/// Метка возле списка мастер-объектов
 		/// </summary>
@@ -77,92 +61,43 @@ namespace Apiary.VM
 		/// </summary>
 		public IEnumerablePropertyReadOnly<TMaster> Master_List { get; protected set; }
 
-
-		public CM_PropertyItem<TDetail> Properties { get; protected set; }
-		public TDetail Value { get; protected set; }
-
-
-		private VM_BaseEditHierarchy(IEnumerable<TMaster> masterList, Action<TMaster> onSelectMaster, string masterCaption = "Выбор владельца : ")
-		{
-			this.Master_List = new IEnumerablePropertyReadOnly<TMaster>(masterList, this.OnSelectMaster);
-			this.onSelectMaster = onSelectMaster;
-			this.Master_Caption = masterCaption;
-		}
-		public VM_BaseEditHierarchy(IEnumerable<TMaster> masterList, Action<TMaster> onSelectMaster, string masterCaption = "Выбор владельца : ", CM_PropertyItem<TDetail> properties = null)
-			: this(masterList, onSelectMaster, masterCaption)
-		{
-			this.Properties_Set(properties);
-		}
-		public VM_BaseEditHierarchy(IEnumerable<TMaster> masterList, Action<TMaster> onSelectMaster, string masterCaption = "Выбор владельца : ", TDetail value = default(TDetail))
-			: this(masterList, onSelectMaster, masterCaption)
-		{
-			this.Value = value;
-		}
-
-
-		private void OnSelectMaster(TMaster value)
-		{
-			this.onSelectMaster?.Invoke(value);
-			
-			//Обман привязки для обновления полей
-			var val = this.Value;
-			this.Value = default(TDetail);
-			this.OnPropertyChanged(nameof(this.Value));
-			this.Value = val;
-
-			this.OnPropertyChanged(nameof(this.Value));
-			//this.OnPropertyChanged(nameof(this.));
-		}
-	}
-
-	class VM_BaseDb<T> : VM_BaseDb
-	{
-		protected T self;
-
-		/// <summary>
-		/// Метка возле списка
-		/// </summary>
-		public string SelfCaption { get; protected set; }
-
-		/// <summary>
-		/// Список себе подобных
-		/// </summary>
-		public IEnumerableProperty<T> SelfList { get; protected set; }
-
-		/// <summary>
-		/// Свойства выбранного элемента
-		/// </summary>
-		public object SelfProperty { get; protected set; }
-
 		/// <summary>
 		/// 
 		/// </summary>
-		public object SelfFooter { get; protected set; }
+		public object Footer { get; protected set; }
 
 
-		public VM_BaseDb(string selfListCaption = "Выбор объекта : ")
+
+		protected VM_BaseEditHierarchy(IEnumerable<TMaster> masterList, string masterCaption = "Выбор владельца : ")
 		{
-			this.SelfCaption = selfListCaption;
+			this.Master_List = new IEnumerablePropertyReadOnly<TMaster>(masterList, this.OnMasterSelect);
+			this.Master_Caption = masterCaption;
 			this.Init();
 		}
-
-
-		public virtual void Set_Self(T value)
+		//public VM_BaseEditHierarchy(IEnumerable<TMaster> masterList, Action<TMaster> onSelectMaster, string masterCaption = "Выбор владельца : ", CM_PropertyItem<TDetail> properties = null)
+		//	: this(masterList, onSelectMaster, masterCaption)
+		//{
+		//	this.Properties_Set(properties);
+		//}
+		public VM_BaseEditHierarchy(IEnumerable<TMaster> masterList, string masterCaption = "Выбор владельца : ", TDetail value = default(TDetail))
+			: this(masterList, masterCaption)
 		{
-			this.self = value;
+			this.Properties_Set(new VM.CM_PropertyItem<TDetail>(value));
 		}
 
 
-		protected void Set_SelfFooter(object value)
+		protected virtual void OnMasterSelect(TMaster value)
 		{
-			this.SelfFooter = value;
-			this.OnPropertyChanged("SelfFooter");
-		}
+			//this.onSelectMaster?.Invoke(value);
+			
+			////Обман привязки для обновления полей
+			//var val = this.Value;
+			//this.Value = default(TDetail);
+			//this.OnPropertyChanged(nameof(this.Value));
+			//this.Value = val;
 
-		protected void Set_SelfProperty(object value)
-		{
-			this.SelfProperty = value;
-			this.OnPropertyChanged("SelfProperty");
+			//this.OnPropertyChanged(nameof(this.Value));
+			//this.OnPropertyChanged(nameof(this.));
 		}
 
 		protected virtual void Init_Internal()
@@ -178,7 +113,27 @@ namespace Apiary.VM
 			//p.Children.Add(b);
 			//Grid.SetColumn(b, 1);
 
-			this.Set_SelfFooter(new[] { Commands.Edit, ApplicationCommands.Save });
+			this.Footer_Set(new[] { Commands.Edit, ApplicationCommands.Save });
+		}
+
+		protected void Footer_Set(object value)
+		{
+			this.Footer = value;
+			this.OnPropertyChanged(nameof(this.Footer));
+		}
+
+
+		private void Init()
+		{
+			this.Debug("()");
+			try
+			{
+				this.Init_Internal();
+			}
+			catch (Exception ex)
+			{
+				this.Error(ex, "()");
+			}
 		}
 
 		#region actions
@@ -190,6 +145,8 @@ namespace Apiary.VM
 			//uc.CommandBindings.Add(Commands.Edit, this.Act_Edit);
 			uc.CommandBindings.Add(ApplicationCommands.Save, this.Act_Save);
 		}
+
+		protected virtual void Act_Save_Internal(ExecutedRoutedEventArgs e) { }
 
 		//private void Act_Edit(ExecutedRoutedEventArgs e)
 		//{
@@ -209,7 +166,7 @@ namespace Apiary.VM
 			this.Debug("()");
 			try
 			{
-
+				this.Act_Save_Internal(e);
 			}
 			catch (Exception ex)
 			{
@@ -219,18 +176,6 @@ namespace Apiary.VM
 
 		#endregion
 
-		private void Init()
-		{
-			this.Debug("()");
-			try
-			{
-				this.Init_Internal();
-			}
-			catch (Exception ex)
-			{
-				this.Error(ex, "()");
-			}
-		}
 	}
 
 }

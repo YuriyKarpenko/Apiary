@@ -9,7 +9,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-		<ListView ItemsSource="{Binding List}" SelectedItem="{Binding SelectedItem}" DisplayMemberPath="Name">
+		<ListView ItemsSource="{Binding List}" SelectedItem="{Binding SelectedItem}">
 			<!--<ListView.View>
 				<GridView>
 					

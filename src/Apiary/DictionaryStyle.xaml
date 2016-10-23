@@ -3,7 +3,8 @@
 					
 					xmlns:it="clr-namespace:IT;assembly=Apiary.Data"
 					xmlns:it_wpf="clr-namespace:IT.WPF"
-					xmlns:core="clr-namespace:Apiary.Data;assembly=Apiary.Data"
+					xmlns:data="clr-namespace:Apiary.Data;assembly=Apiary.Data"
+					xmlns:data_m="clr-namespace:Apiary.Data.Model;assembly=Apiary.Data"
 					xmlns:v="clr-namespace:Apiary.V"
 					xmlns:vm="clr-namespace:Apiary.VM"
 					>
@@ -41,15 +42,24 @@
 	<!--#endregion-->
 	
 	<!--#region dto-->
-	<DataTemplate DataType="{x:Type core:IM_Beehive}">
+	<DataTemplate DataType="{x:Type data_m:M_Beehive}">
 		<StackPanel Orientation="Horizontal">
 			<TextBlock Text="{Binding Name}"/>
 			<TextBlock Text="; "/>
 			<TextBlock Text="{Binding Address}"/>
 		</StackPanel>
 	</DataTemplate>
-	<!--#endregion-->
 	
+	<DataTemplate DataType="{x:Type data_m:M_Family}">
+		<StackPanel Orientation="Horizontal">
+			<TextBlock Text="{Binding Name}"/>
+			<TextBlock Text="; "/>
+			<TextBlock Text="{Binding BirthDay}"/>
+		</StackPanel>
+	</DataTemplate>
+	
+	<!--#endregion-->
+
 	<Style TargetType="{x:Type Window}" x:Key="Def_Window">
 		<Setter Property="Background" Value="LightGray"/>
 		<!--<Setter xmlns:core="clr-namespace:Apiary.Data;assembly=Apiary.Data" />-->

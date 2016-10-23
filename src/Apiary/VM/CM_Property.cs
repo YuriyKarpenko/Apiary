@@ -15,8 +15,12 @@ namespace Apiary.VM
 	{
 		string Key { get; }
 	}
+	public interface IPropertyRecord<TValue> : IPropertyRecord
+	{
+		TValue Value { get; }
+	}
 
-	class PropertyRecord<T, TValue> : IPropertyRecord
+	public class PropertyRecord<T, TValue> : IPropertyRecord<TValue>
 	{
 		private Func<T, string> GetCaption;
 		private Func<T, TValue> GetValue;
@@ -56,40 +60,45 @@ namespace Apiary.VM
 	{
 		static List<PropertyInfo> GetProperties()
 		{
-			var res = typeof(T).GetProperties();
+			var res = typeof(T).GetProperties(true);
 			return res
 				.Where(i => i.CanWrite)
-				.Where(i => i.GetCustomAttribute<BrowsableAttribute>()?.Browsable ?? true)
-				.OrderBy(i => i.GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>()?.GetOrder() ?? 0)
+				.OrderBy(i => i.GetCustomAttribute<DisplayAttribute>()?.GetOrder() ?? 10)
 				.ToList();
 		}
 
 		static string GetCaption(MemberInfo value)
 		{
 			return value.GetNameFromAttributes(value.Name);
-			//var aa = null
-			//	?? value.GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>(true)?.Name
-			//	?? value.GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>(true)?.ShortName
-			//	?? value.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName
-			//	?? value.GetCustomAttribute<DescriptionAttribute>(true)?.Description
-			//	;
-			//return aa ?? value.Name;
 		}
+
+		private T value;
 
 		public T Value { get; private set; }
 
-		public IPropertyRecord[] List { get; private set; }
-
+#if dic
+		public KeyValuePair<string, object>[] List { get; private set; }
+#else
+		public IPropertyRecord<object>[] List { get; private set; }
+#endif
 
 		public CM_PropertyItem(T data) 
 		{
-			this.Value = data;
+			this.value = data;
+			//this.Value = data;
 			var props = GetProperties();
+#if dic
+			this.List = props
+				.Select(i => new KeyValuePair<string, object>(i.GetNameFromAttributes(i.Name), i.GetValue(data, null)))
+				.ToArray();
+#else
 			this.List = props.Select(i => this.GenerateItem(i)).ToArray();
+#endif
+
 		}
 
 
-		private IPropertyRecord GenerateItem(MemberInfo value)
+		private IPropertyRecord<object> GenerateItem(MemberInfo value)
 		{
 			return new PropertyRecord<MemberInfo, object>(value, GetCaption, this.GetValue<object>, SetValue<object>);
 		}
@@ -97,9 +106,9 @@ namespace Apiary.VM
 		private TValue GetValue<TValue>(MemberInfo value)
 		{
 			if (value is FieldInfo)
-				return (TValue)(value as FieldInfo).GetValue(this.Value);
+				return (TValue)(value as FieldInfo).GetValue(this.value);
 			if (value is PropertyInfo)
-				return (TValue)(value as PropertyInfo).GetValue(this.Value);
+				return (TValue)(value as PropertyInfo).GetValue(this.value);
 			return default(TValue);
 		}
 
@@ -111,21 +120,16 @@ namespace Apiary.VM
 				case MemberTypes.Field:
 					var vf = value as FieldInfo;
 					vv = Convert.ChangeType(v, vf.FieldType);
-					vf.SetValue(this.Value, vv);
+					vf.SetValue(this.value, vv);
 					break;
 
 				case MemberTypes.Property:
 					var vp = value as PropertyInfo;
 					vv = Convert.ChangeType(v, vp.PropertyType);
-					vp.SetValue(this.Value, vv);
+					vp.SetValue(this.value, vv);
 					break;
 			}
 		}
-
-		//class DataItemMI : DataItem<MemberInfo, object>
-		//{
-
-		//}
 	}
 
 	class CM_PropertyFamily : CM_PropertyBase<IM_PropertyInfo>

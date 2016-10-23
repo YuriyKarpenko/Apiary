@@ -33,6 +33,12 @@ namespace Apiary.VM
 				vm.Init_Command(d as FrameworkElement);
 		}
 
+
+		public static MessageBoxResult MsgDlg(string message, MessageBoxButton btns)
+		{
+			return MessageBox.Show(App.Current.MainWindow, message, Ap.AppCaption, btns, MessageBoxImage.Question);
+		}
+
 		#endregion 
 
 		#region events

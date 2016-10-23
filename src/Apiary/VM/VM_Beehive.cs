@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -13,30 +13,30 @@ using Apiary.M;
 
 namespace Apiary.VM
 {
-	class VM_Beehive : VM_BaseDb<IM_Beehive>
+	class VM_Beehive : VM_BaseEditHierarchy<IM_Beehive, IM_Beehive>
 	{
 		public IEnumerableProperty<IM_FamilyInfo> Families { get; private set; }
 
 
 		public VM_Beehive(long? id)
+			: base(DbProvider.Instance.List_Beehive(), "Выбор улья :")
 		{
 			if (id.HasValue)
-				this.SelfList?.Select(i => i.Id == id.Value, true);
+				this.Master_List?.Select(i => i.Id == id.Value, true);
 		}
 
-
-		public override void Set_Self(IM_Beehive value)
+		protected override void OnMasterSelect(IM_Beehive value)
 		{
-			base.Set_Self(value);
-			var prop = new CM_PropertyItem<IM_Beehive>(this.self);
-			this.Set_SelfProperty(prop);
+			base.OnMasterSelect(value);
+
+			var prop = new CM_PropertyItem<IM_Beehive>(value);
+			this.Properties_Set(prop);
 			this.Act_Refresh(null);
 		}
 
 		protected override void Init_Internal()
 		{
 			base.Init_Internal();
-			this.SelfList = new IEnumerableProperty<IM_Beehive>(() => this.db.List_Beehive(), this.Set_Self);
 			this.Families = new IEnumerableProperty<IM_FamilyInfo>(Family_Get, this.Family_Select);
 			this.Content_Set(this.Families);
 		}
@@ -44,7 +44,7 @@ namespace Apiary.VM
 
 		private IEnumerable<IM_FamilyInfo> Family_Get()
 		{
-			var res = this.db.Get_FamilyInfoByBeehive(this.self).ToArray();
+			var res = this.db.Get_FamilyInfoByBeehive(this.Master_List.SelectedItem)?.ToArray();
 			return res;
 		}
 		private void Family_Select(IM_FamilyInfo value)
@@ -61,7 +61,7 @@ namespace Apiary.VM
 
 			uc.CommandBindings.Add(ApplicationCommands.Delete, this.Act_Delete, e => e.CanExecute = this.Families?.HasSelected ?? false);
 			uc.CommandBindings.Add(Commands.Edit, this.Act_Edit, e => e.CanExecute = this.Families?.HasSelected ?? false);
-			uc.CommandBindings.Add(ApplicationCommands.New, this.Act_New, e => e.CanExecute = this.self != null);
+			uc.CommandBindings.Add(ApplicationCommands.New, this.Act_New, e => e.CanExecute = this.Master_List.HasSelected);
 			uc.CommandBindings.Add(NavigationCommands.Refresh, this.Act_Refresh);
 		}
 
@@ -69,7 +69,15 @@ namespace Apiary.VM
 		{
 			try
 			{
+				var editItem = this.Families.SelectedItem.Family.ToModel();
+				if (MsgDlg($"Семья {editItem} умерла ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+				{
+					editItem.DeathDay = DateTime.Now;
+					editItem.Hide = true;
+					this.db.Set_Family(editItem);
 
+					this.Act_Refresh(e);
+				}
 			}
 			catch (Exception ex)
 			{
@@ -81,6 +89,12 @@ namespace Apiary.VM
 		{
 			try
 			{
+				var editItem = this.Families.SelectedItem.Family.ToModel();
+				var vm = new VM_BaseEdit<M_Family>(editItem);
+				if (VM_Dialog.Show<V.UC_EditItem>("Редактирование семьи", vm, null))
+					this.db.Set_Family(editItem);
+
+				this.Act_Refresh(e);
 			}
 			catch (Exception ex)
 			{
@@ -92,9 +106,9 @@ namespace Apiary.VM
 		{
 			try
 			{
-				M_Family newItem = new M_Family();// (Apiary.Data.Model.M_Family)this.db.S_Family.R_Family.Create();
-				newItem.BeehiveId = this.self.Id;
-				M_Family.Beehives = this.SelfList.List;
+				M_Family newItem = new M_Family();
+				newItem.BeehiveId = this.Master_List.SelectedItem.Id;
+				M_Family.Beehives = this.Master_List.List;
 				var vm = new VM_BaseEdit<M_Family>(newItem);
 				if (VM_Dialog.Show<V.UC_EditItem>("Редактирование семьи", vm, null))
 					this.db.Set_Family(newItem);
@@ -111,7 +125,8 @@ namespace Apiary.VM
 		{
 			try
 			{
-				this.Families.Reset(this.Family_Get());
+				var data = this.Family_Get();
+				this.Families.Reset(data);
 			}
 			catch (Exception ex)
 			{

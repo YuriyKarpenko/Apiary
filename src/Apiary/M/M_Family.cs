@@ -13,11 +13,6 @@ namespace Apiary.M
 		[Browsable(false)]
 		public static IEnumerable<IM_Beehive> Beehives { get; set; }
 
-		//public static implicit operator M_Family(Apiary.Data.Model.M_Family value)
-		//{
-		//	return value.ToModel();
-		//}
-
 
 		//[Browsable(false)]
 		[Display(Name = "Улей", AutoGenerateField = true, Order = 1)]
@@ -46,7 +41,7 @@ namespace Apiary.M
 
 		public override string ToString()
 		{
-			return $"{this.Beehive} -> {this.Name}";
+			return $"{this.Beehive} -> {this.Id}:{this.Name}";
 		}
 	}
 

@@ -46,7 +46,7 @@ namespace Apiary.M
 
 		public override string ToString()
 		{
-			return $"{base.ToString()} : {Id} c{Created} m{Modified} h{Hide}";
+			return $"{base.ToString()} -> {Id}: c{Created} m{Modified} h{Hide}";
 		}
 	}
 }

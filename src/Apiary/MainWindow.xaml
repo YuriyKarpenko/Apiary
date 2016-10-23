@@ -14,7 +14,7 @@
 	</Window.DataContext>
 
 	<Window.Resources>
-		
+
 		<!--<DataTemplate DataType="{x:Type vm:VM_Family}">
 			<v:V_Family/>
 		</DataTemplate>-->
@@ -22,13 +22,21 @@
 		<DataTemplate DataType="{x:Type vm:VM_Beehive}">
 			<v:V_SelfList/>
 		</DataTemplate>
-		
+
 		<DataTemplate DataType="{x:Type vm:VM_Family}">
 			<v:V_SelfList/>
 		</DataTemplate>
-		
+
+		<DataTemplate DataType="{x:Type v:MenuItemEasy}">
+			<MenuItem Header="{Binding Header}" Command="{Binding Command}" ItemsSource="{Binding Items}"/>
+		</DataTemplate>
+
+		<!--<DataTemplate DataType="{x:Type RoutedUICommand}">
+			<MenuItem Header="Text"/>
+		</DataTemplate>-->
+
 	</Window.Resources>
-	
+
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto"/>
@@ -38,16 +46,17 @@
 		</Grid.RowDefinitions>
 
 		<Menu ItemsSource="{Binding MainMenu}"/>
-		
-		<StackPanel Grid.Row="1" Orientation="Horizontal">
-			<!--<Menu VerticalAlignment="Center">
+
+		<!--<Menu Grid.Row="1" ItemsSource="{Binding Menu_Dic}"/>-->
+		<!--<StackPanel Grid.Row="1" Orientation="Horizontal">
+			--><!--<Menu VerticalAlignment="Center">
 				<MenuItem Header="File">
 					<MenuItem Command="New"/>
 					<MenuItem Command="Open"/>
 				</MenuItem>
-			</Menu>-->
+			</Menu>--><!--
 
-		</StackPanel>
+		</StackPanel>-->
 
 		<ContentControl Grid.Row="2" Content="{Binding Content}"/>
 

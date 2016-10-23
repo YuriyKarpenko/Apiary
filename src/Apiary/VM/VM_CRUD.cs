@@ -31,6 +31,8 @@ namespace Apiary.VM
 				if (pd.GetAttributeValue<BrowsableAttribute, bool>(a => a.Browsable, true))
 				{
 					DataGridColumn col = null;
+					var binding = new System.Windows.Data.Binding(pd.Name);
+
 					var enumType = pd.GetAttributeValue<EnumDataTypeAttribute, Type>(a => a.EnumType, null);
 					if (enumType != null)
 					{
@@ -39,22 +41,21 @@ namespace Apiary.VM
 						cbCol.ItemsSource = Enum.GetValues(enumType)
 							.Cast<Enum>()
 							.ToDictionary(i => Convert.ChangeType(i, intType), i => i.ToString());
-						cbCol.SelectedValueBinding = new System.Windows.Data.Binding (pd.Name);
+						cbCol.SelectedValueBinding = binding;
 						cbCol.SelectedValuePath = "Key";
 						cbCol.DisplayMemberPath = "Value";
 
 						col = cbCol;
 					}
-					else 
-					{
-						var binding = new System.Windows.Data.Binding (pd.Name);
-						if (col == null && pd.PropertyType == typeof(bool))
-							col = new DataGridCheckBoxColumn() { Binding = binding };
-						//if (col == null && pd.PropertyType == typeof(DateTime))
-						//	col = new DataGrid() { Binding = binding };
-						if (col == null)
-							col = new DataGridTextColumn() { Binding = binding };
-					}
+
+					if (col == null && pd.PropertyType == typeof(bool))
+						col = new DataGridCheckBoxColumn() { Binding = binding };
+
+					//if (col == null && pd.PropertyType == typeof(DateTime))
+					//	col = new DataGrid() { Binding = binding };
+
+					if (col == null)
+						col = new DataGridTextColumn() { Binding = binding };
 
 					col.IsReadOnly = !pd.GetAttributeValue<EditableAttribute, bool>(a => a.AllowEdit, true);
 					col.Header = pd.GetNameFromAttributes(pd.Name);

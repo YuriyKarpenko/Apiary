@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Apiary.V
 {
 	/// <summary>
-	/// Interaction logic for V_CRUD.xaml
+	/// Interaction logic for UC_EditItem.xaml
 	/// </summary>
-	public partial class V_Dictionary : Window
+	public partial class UC_EditItem : UserControl
 	{
-		public V_Dictionary()
+		public UC_EditItem()
 		{
 			InitializeComponent();
 		}

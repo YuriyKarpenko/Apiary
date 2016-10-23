@@ -83,6 +83,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DbProvider.cs" />
+    <Compile Include="M\M_Base.cs" />
+    <Compile Include="M\M_Family.cs" />
     <Compile Include="M\M_Property.cs" />
     <Compile Include="VM\CM_Property.cs" />
     <Compile Include="VM\Base\ICRUD.cs" />
@@ -90,29 +93,28 @@
     <Compile Include="VM\Base\VM_BaseDb.cs" />
     <Compile Include="VM\VM_Beehive.cs" />
     <Compile Include="VM\VM_CRUD.cs" />
+    <Compile Include="VM\VM_Dialog.cs" />
     <Compile Include="VM\VM_Dictionary.cs" />
     <Compile Include="VM\VM_Family.cs" />
     <Compile Include="VM\VM_Main.cs" />
     <Compile Include="VM\VM_Settings.cs" />
-    <Compile Include="V\Commands.cs" />
+    <Compile Include="VM\Commands.cs" />
+    <Compile Include="V\GridBehaviour.cs" />
     <Compile Include="V\MenuItemEasy.cs" />
-    <Compile Include="V\V_EditItem.xaml.cs">
-      <DependentUpon>V_EditItem.xaml</DependentUpon>
+    <Compile Include="V\UC_Dictionary.xaml.cs">
+      <DependentUpon>UC_Dictionary.xaml</DependentUpon>
     </Compile>
-    <Compile Include="V\UC_ListView.xaml.cs">
-      <DependentUpon>UC_ListView.xaml</DependentUpon>
+    <Compile Include="V\UC_EditItem.xaml.cs">
+      <DependentUpon>UC_EditItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="V\UC_PropertyItem.xaml.cs">
       <DependentUpon>UC_PropertyItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="V\V_Dictionary.xaml.cs">
-      <DependentUpon>V_Dictionary.xaml</DependentUpon>
+    <Compile Include="V\UC_ListView.xaml.cs">
+      <DependentUpon>UC_ListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="V\V_CRUD.xaml.cs">
-      <DependentUpon>V_CRUD.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="V\V_Family.xaml.cs">
-      <DependentUpon>V_Family.xaml</DependentUpon>
+    <Compile Include="V\V_Dialog.xaml.cs">
+      <DependentUpon>V_Dialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="V\V_SelfList.xaml.cs">
       <DependentUpon>V_SelfList.xaml</DependentUpon>
@@ -138,11 +140,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="V\V_EditItem.xaml">
+    <Page Include="V\UC_Dictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="V\UC_ListView.xaml">
+    <Page Include="V\UC_EditItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -150,17 +152,13 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="V\V_Dictionary.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="V\V_CRUD.xaml">
+    <Page Include="V\UC_ListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="V\V_Family.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="V\V_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="V\V_SelfList.xaml">
       <SubType>Designer</SubType>

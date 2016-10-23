@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
+using System.Reflection;
 using System.Windows.Input;
 
 using Apiary.V;
@@ -18,12 +18,15 @@ namespace Apiary.VM
 	{
 		public static List<DataGridColumn> GenerateColumns<T>()
 		{
-			var pds = TypeDescriptor.GetProperties(typeof(T));
+			//var pds = TypeDescriptor.GetProperties(typeof(T));
+			var pds = typeof(T).GetProperties(true)
+				.OrderBy(i => i.GetCustomAttribute<DisplayAttribute>(true)?.GetOrder() ?? 10)
+				.ToList();
 			if (pds == null || pds.Count == 0)
 				return null;
 
 			var res = new List<DataGridColumn>();
-			foreach (PropertyDescriptor pd in pds)
+			foreach (var pd in pds)
 			{
 				if (pd.GetAttributeValue<BrowsableAttribute, bool>(a => a.Browsable, true))
 				{
@@ -54,16 +57,7 @@ namespace Apiary.VM
 					}
 
 					col.IsReadOnly = !pd.GetAttributeValue<EditableAttribute, bool>(a => a.AllowEdit, true);
-					var attr = pd.Attributes.OfType<DisplayAttribute>().FirstOrDefault();
-					if (attr != null)
-					{
-						col.Header = attr.ShortName ?? attr.Name ?? pd.Name;
-						col.DisplayIndex = attr.GetOrder() ?? 0;
-					}
-					else
-					{
-						col.Header = pd.GetAttributeValueStr<DisplayNameAttribute>(a => a.DisplayName) ?? pd.Name;
-					}
+					col.Header = pd.GetNameFromAttributes(pd.Name);
 
 					res.Add(col);
 				}

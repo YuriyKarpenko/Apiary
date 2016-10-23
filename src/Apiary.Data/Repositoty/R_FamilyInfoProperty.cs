@@ -28,8 +28,8 @@ namespace Apiary.Data.Repositoty
 	SELECT D.* 
 	FROM [{Tables.FamilyInfoProperty}] D
 		INNER JOIN [{Tables.FamilyProperty}] P ON P.Id = D.FamilyPropertyId
-	WHERE [Hidden] = 0 AND [FamilyId] = @FamilyId
-	ORDER BY p.Order", CommandType.Text, "FamilyId");
+	WHERE p.[Hide] = 0 AND [FamilyId] = @FamilyId
+	ORDER BY p.[Order]", CommandType.Text, "FamilyId");
 
 		#endregion
 
@@ -49,7 +49,7 @@ namespace Apiary.Data.Repositoty
 			}
 			catch (Exception ex)
 			{
-				this.Error(ex, "()");
+				this.Error(ex, $"({cmd_GetByFamily.CommandText})");
 				throw;
 			}
 		}

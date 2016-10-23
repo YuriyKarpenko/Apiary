@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="Apiary.V.UC_Dictionary"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 
+			 xmlns:it_wpf="clr-namespace:IT.WPF;assembly=IT"
+			 xmlns:v="clr-namespace:Apiary.V"
+			 xmlns:vm="clr-namespace:Apiary.VM"
+		
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+	<Grid>
+		<Grid.Resources>
+			<DataTemplate DataType="{x:Type vm:VM_Dictionary`1}">
+				<!--<DataTemplate DataType="{x:Type it_wpf:IEnumerableProperty`1}">-->
+				<DataGrid ItemsSource="{Binding List.List}" SelectedItem="{Binding SelectedItem}"/>
+			</DataTemplate>
+
+		</Grid.Resources>
+		<!--<ToolBar Background="Transparent">
+			<Button Style="{StaticResource cmd_h}" Command="Refresh" Content="{StaticResource img_Refresh}"/>
+			<Separator/>
+			<Button Style="{StaticResource cmd_h}" Command="New" Content="{StaticResource img_Plus}"/>
+			<Button Style="{StaticResource cmd_h}" Command="Delete" Content="{StaticResource img_Cancel}"/>
+			<Button Style="{StaticResource cmd_h}" Command="v:Commands.Edit" Content="{StaticResource img_Edit}"/>
+			<Button Style="{StaticResource cmd_h}" Command="Save" Content="{StaticResource img_Save}"/>
+		</ToolBar>-->
+		<DataGrid>
+		</DataGrid>
+		<!--<ContentControl Grid.Row="1" Content="{Binding Content}"/>-->
+		<DataGrid AutoGenerateColumns="False" RowHeaderWidth="10"
+				  CanUserAddRows="True" CanUserDeleteRows="True"
+				  ItemsSource="{Binding Content.List}" SelectedItem="{Binding Content.SelectedItem}" 
+				  it_wpf:DataGridBehaviour.Columns="{Binding Columns}"
+				  />
+	</Grid>
+</UserControl>

@@ -9,7 +9,7 @@ using IT.WPF;
 
 namespace Apiary.VM
 {
-	class VM_Family : VM_BaseDb<IM_Family>
+	class VM_Family : VM_BaseDb<M.M_Family>
 	{
 
 		public CM_PropertyFamily Properties { get; private set; }
@@ -19,7 +19,7 @@ namespace Apiary.VM
 		{
 		}
 
-		public override void Set_Self(IM_Family value)
+		public override void Set_Self(M.M_Family value)
 		{
 			base.Set_Self(value);
 			this.Set_SelfProperty(new CM_PropertyFamily(value));
@@ -30,7 +30,7 @@ namespace Apiary.VM
 		protected override void Init_Internal()
 		{
 			base.Init_Internal();
-			this.SelfList = new IEnumerableProperty<IM_Family>(() => this.db.S_Family.R_Family.List(false).ToList(), this.Set_Self);
+			this.SelfList = new IEnumerableProperty<M.M_Family>(() => this.db.List_Family(false).ToList(), this.Set_Self);
 		}
 
 		private void Init_Content()

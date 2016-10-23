@@ -17,7 +17,7 @@ namespace Apiary.Data.Repositoty
 #else
         T Get(long id); //	Refresh
 #endif
-        T Create();					//	Create
+        //T Create();					//	Create
 		int Delete(T item);			//	Delete
 		IEnumerable<T> List(bool withHidden = false);	    //	Refresh
 		int Set(T item);			//	Update

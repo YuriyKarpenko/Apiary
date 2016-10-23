@@ -33,7 +33,15 @@ namespace Apiary.VM
 				vm.Init_Command(d as FrameworkElement);
 		}
 
-		#endregion
+		#endregion 
+
+		#region events
+
+		public event EventHandler<EventArgs<FrameworkElement>> ChangeDataContext_FE;
+		public event EventHandler<EventArgs<UserControl>> ChangeDataContext_UC;
+		public event EventHandler<EventArgs<Window>> ChangeDataContext_W;
+
+		#endregion 
 
 		protected Window window { get; private set; }
 		protected UserControl uc { get; private set; }
@@ -43,11 +51,17 @@ namespace Apiary.VM
 		protected virtual void Init_Command_Internal(Window w)
 		{
 			this.window = w;
-			w.CommandBindings.Add(ApplicationCommands.Close, this.Act_Close);
-			w.CommandBindings.Add(SystemCommands.CloseWindowCommand, this.Act_Close);
+			this.ChangeDataContext_W?.Invoke(this, new EventArgs<Window>(w));
 		}
-		protected virtual void Init_Command_Internal(UserControl uc) { this.uc = uc; }
-		protected virtual void Init_Command_Internal(FrameworkElement fe) { }
+		protected virtual void Init_Command_Internal(UserControl uc)
+		{
+			this.uc = uc;
+			this.ChangeDataContext_UC?.Invoke(this, new EventArgs<UserControl>(uc));
+		}
+		protected virtual void Init_Command_Internal(FrameworkElement fe)
+		{
+			this.ChangeDataContext_FE?.Invoke(this, new EventArgs<FrameworkElement>(fe));
+		}
 
 		void Init_Command(FrameworkElement e)
 		{
@@ -70,11 +84,42 @@ namespace Apiary.VM
 
 		#endregion
 
-		protected virtual void Act_Close(ExecutedRoutedEventArgs e)
-		{
-			this.window?.Close();
-		}
-
 	}
 
+	class VM_BaseWindow : VM_Base
+	{
+		protected override void Init_Command_Internal(Window w)
+		{
+			this.Debug("()");
+			try
+			{
+				base.Init_Command_Internal(w);
+				w.CommandBindings.Add(ApplicationCommands.Close, this.Act_Close);
+				w.CommandBindings.Add(SystemCommands.CloseWindowCommand, this.Act_Close);
+			}
+			catch (Exception ex)
+			{
+				this.Error(ex, "()");
+				throw;
+			}
+		}
+
+		protected virtual void Act_Close(ExecutedRoutedEventArgs e)
+		{
+			this.Debug("()");
+			try
+			{
+				if (this.window != null)
+				{
+					this.window.DialogResult = false;
+					this.window.Close();
+				}
+			}
+			catch (Exception ex)
+			{
+				this.Error(ex, "()");
+				throw;
+			}
+		}
+	}
 }

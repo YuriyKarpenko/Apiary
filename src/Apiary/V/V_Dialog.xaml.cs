@@ -17,9 +17,9 @@ namespace Apiary.V
 	/// <summary>
 	/// Interaction logic for V_CRUD.xaml
 	/// </summary>
-	public partial class V_CRUD : Window
+	public partial class V_Dialog : Window
 	{
-		public V_CRUD()
+		public V_Dialog()
 		{
 			InitializeComponent();
 		}

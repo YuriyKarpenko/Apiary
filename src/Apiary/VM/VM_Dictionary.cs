@@ -1,40 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
+using Apiary.M;
 using IT;
 using IT.WPF;
-using Apiary.Data;
-using Apiary.Data.Model;
-using Apiary.Data.Repositoty;
-using Apiary.V;
 
 namespace Apiary.VM
 {
-	class VM_Dictionary<T, I> : VM_BaseDb
-        where I : IEntityDic
-        where T : EntityDic, I, new()
+	class VM_Dictionary<T> : VM_BaseDb //where T : M_Base//, new()
 	{
-		IRepositoryDic<I> repo;
+		private Action<T> onDelete = null;
 
 		public List<DataGridColumn> Columns { get { return VM_CRUD.GenerateColumns<T>(); } /*private set; */}
 		public IEnumerableProperty<T> List { get; private set; }
 
 
-		public VM_Dictionary(IRepositoryDic<I> repository)
-			: base(typeof(I).GetAttributeValueStr<DescriptionAttribute>(a => a.Description))
+		public VM_Dictionary(IEnumerable<T> list, Action<T> onDelete)
+			//: base(typeof(T).GetAttributeValueStr<DescriptionAttribute>(a => a.Description))
 		{
-			Contract.NotNull(repository, "repository");
+			Contract.NotNull(list, "list");
 
-			this.repo = repository;
+			this.onDelete = onDelete;
 
-			this.List = new IEnumerableProperty<T>(() => this.repo.List(true).Cast<T>());
+			this.List = new IEnumerableProperty<T>(() => list);
 
 			this.Content_Set(this.List);
 		}
@@ -47,17 +39,15 @@ namespace Apiary.VM
 		{
 			base.Init_Command_Internal(w);
 
-			w.CommandBindings.Add(ApplicationCommands.Close, this.Act_Close);
 			w.CommandBindings.Add(ApplicationCommands.Delete, this.Act_Delete_Intrnal);
-			//w.CommandBindings.Add(ApplicationCommands.New, this.Act_Create);
-			w.CommandBindings.Add(ApplicationCommands.Save, this.Act_Save_Intrnal);
 		}
 
 
 		protected void Act_Delete_Intrnal(ExecutedRoutedEventArgs e)
 		{
+			this.onDelete?.Invoke(this.List.SelectedItem);
 			//base.Act_Delete_Intrnal(e);
-			this.List.SelectedItem.Hide = true;
+			//this.List.SelectedItem.Hide = true;
 			//this.repo.Delete(this.List.SelectedItem);
 			//this.Act_Refresh(e);
 		}
@@ -78,12 +68,13 @@ namespace Apiary.VM
 		//	this.repo.Set(this.List.SelectedItem);
 		//}
 
-		protected void Act_Save_Intrnal(ExecutedRoutedEventArgs e)
-		{
-			//base.Act_Save_Intrnal(e);
-			this.repo.Set(this.List.List);
-			this.Act_Close(e);
-		}
+		//protected void Act_Save_Intrnal(ExecutedRoutedEventArgs e)
+		//{
+		//	//base.Act_Save_Intrnal(e);
+		//	this.onSave?.Invoke(this.List.List);
+		//	this.Act_Close(e);
+		//}
+
 		#endregion
 	}
 }

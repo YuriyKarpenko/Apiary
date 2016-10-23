@@ -98,7 +98,7 @@ namespace Apiary.Data.Repositoty
 		where T : class, I, IEntityBase, new()
 	{
 		//protected List<T> data = new List<T>();
-		protected readonly PropertyInfo[] Properties = typeof(T).GetProperties();
+		//protected readonly PropertyInfo[] Properties = typeof(T).GetProperties();
 		protected readonly string[] PropertyNames = typeof(T).GetProperties()
 			.Where(i => i.CanWrite)
 			.Select(i => i.Name)
@@ -192,22 +192,21 @@ namespace Apiary.Data.Repositoty
 
 		public virtual int Delete(I item)
 		{
-			this.Debug("()");
+			this.Info($"({item})");
 			try
 			{
-				this.Info($"({item})");
 				return this.ExecuteCmd(cmdDelete, item);
 			}
 			catch (Exception ex)
 			{
-				this.Error(ex, "()");
+				this.Error(ex, $"({item})");
 				throw;
 			}
 		}
 
 		public virtual IEnumerable<I> List(bool withHidden = false)
 		{
-			this.Debug("()");
+			this.Debug($"({withHidden})");
 			try
 			{
 				if (this.cmdSelect.Parameters.Contains("All"))
@@ -217,7 +216,7 @@ namespace Apiary.Data.Repositoty
 			}
 			catch (Exception ex)
 			{
-				this.Error(ex, $"() : {this.cmdSelect.CommandText}");
+				this.Error(ex, $"({withHidden}) : {this.cmdSelect.CommandText}");
 				throw;
 			}
 			//return null;
@@ -225,10 +224,9 @@ namespace Apiary.Data.Repositoty
 
 		public virtual int Set(I item)
 		{
-			this.Debug("()");
+			this.Debug($"({item})");
 			try
 			{
-				this.Info($"({item})");
 				if (item.IsNew)
 					item.Created = DateTime.Now;
 				item.Modified = DateTime.Now;
@@ -236,17 +234,15 @@ namespace Apiary.Data.Repositoty
 			}
 			catch (Exception ex)
 			{
-				this.Error(ex, "()");
+				this.Error(ex, $"({item})");
 				throw;
 			}
 		}
 
 		public virtual int Set(IEnumerable<I> items)
 		{
-			this.Debug("()");
 			try
 			{
-				this.Info($"({items})");
 				return this.Connection.DoWorkInTran<int>(conn =>
 				{
 					var res = 0;
@@ -259,7 +255,7 @@ namespace Apiary.Data.Repositoty
 			}
 			catch (Exception ex)
 			{
-				this.Error(ex, "()");
+				this.Error(ex, $"({items})");
 				throw;
 			}
 		}
@@ -268,7 +264,7 @@ namespace Apiary.Data.Repositoty
 
 		protected int ExecuteCmd(IDbCommand cmd, I item)
 		{
-			this.Debug("()");
+			this.Debug($"('{cmd}', {item})");
 			try
 			{
 				if (cmd != null)
@@ -281,7 +277,8 @@ namespace Apiary.Data.Repositoty
 			}
 			catch (Exception ex)
 			{
-				this.Error(ex, $"({cmd.CommandText})");
+				this.Error(ex, $"('{cmd.CommandText}', {item})");
+				throw;
 			}
 
 			return 0;
@@ -290,12 +287,13 @@ namespace Apiary.Data.Repositoty
 
 		private void FillParametres(IDbCommand cmd, I item)
 		{
-			this.Debug("()");
+			this.Debug($"('{cmd}', {item})");
 			try
 			{
+				var properties = item.GetType().GetProperties();
 				foreach (var p in cmd.Parameters.Cast<IDataParameter>())
 				{
-					var pi = this.Properties.FirstOrDefault(i => p.ParameterName.Contains(i.Name));
+					var pi = properties.FirstOrDefault(i => p.ParameterName.Contains(i.Name));
 					if (pi == null)
 					{
 						this.Warn(null, "() Missing parameter '{0}'", p.ParameterName);
@@ -308,14 +306,14 @@ namespace Apiary.Data.Repositoty
 			}
 			catch (Exception ex)
 			{
-				this.Error(ex, "()");
+				this.Error(ex, $"('{cmd}', {item})");
 				throw;
 			}
 		}
 
 		private IDbCommand GenerateInsertCmd(Tables table)
 		{
-			this.Debug("()");
+			this.Debug($"({table})");
 			try
 			{
 				var fields = this.PropertyNames
@@ -337,14 +335,14 @@ namespace Apiary.Data.Repositoty
 			}
 			catch (Exception ex)
 			{
-				this.Error(ex, "()");
+				this.Error(ex, $"({table})");
 				throw;
 			}
 		}
 
 		private IDbCommand GenerateUpdateCmd(Tables table)
 		{
-			this.Debug("()");
+			this.Debug($"({table})");
 			try
 			{
 				var fields = this.PropertyNames
@@ -358,7 +356,7 @@ namespace Apiary.Data.Repositoty
 			}
 			catch (Exception ex)
 			{
-				this.Error(ex, "()");
+				this.Error(ex, $"({table})");
 				throw;
 			}
 		}

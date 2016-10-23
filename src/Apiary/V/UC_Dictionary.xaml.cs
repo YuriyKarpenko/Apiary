@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Apiary.V
 {
 	/// <summary>
-	/// Interaction logic for UC_EditItem.xaml
+	/// Interaction logic for UC_Dictionary.xaml
 	/// </summary>
-	public partial class V_EditItem : Window
+	public partial class UC_Dictionary : UserControl
 	{
-		public V_EditItem()
+		public UC_Dictionary()
 		{
 			InitializeComponent();
 		}

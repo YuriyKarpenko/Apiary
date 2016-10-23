@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="Apiary.V.UC_EditItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+
+			 xmlns:v="clr-namespace:Apiary.V"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="300"
+			 >
+	<Grid v:GridBehaviour.PropertyGrid_Value="{Binding Value}">
+		<Grid.Resources>
+			<Style TargetType="{x:Type CheckBox}">
+				<Setter Property="Margin" Value="2"/>
+				<Setter Property="VerticalAlignment" Value="Center"/>
+			</Style>
+			<Style TargetType="{x:Type TextBlock}">
+				<Setter Property="Margin" Value="2"/>
+				<Setter Property="VerticalAlignment" Value="Center"/>
+			</Style>
+		</Grid.Resources>
+	</Grid>
+</UserControl>

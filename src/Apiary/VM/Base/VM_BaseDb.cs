@@ -12,24 +12,24 @@ namespace Apiary.VM
 {
 	class VM_BaseDb : VM_Base
 	{
-		protected readonly DB db = DB.Instance;
+		protected readonly DbProvider db = DbProvider.Instance;
 
-		public string Caption { get; private set; }
+		//public string Caption { get; private set; }
 		public object Content { get; private set; }
 
 
-		public VM_BaseDb(string title = null)
-		{
-			this.Caption_Set(title // ?? Ap.AppCaption
-				);
-		}
+		//public VM_BaseDb(string title = null)
+		//{
+		//	this.Caption_Set(title // ?? Ap.AppCaption
+		//		);
+		//}
 
 
-		protected virtual void Caption_Set(string caption)
-		{
-			this.Caption = caption;
-			this.OnPropertyChanged(nameof(this.Caption));
-		}
+		//protected virtual void Caption_Set(string caption)
+		//{
+		//	this.Caption = caption;
+		//	this.OnPropertyChanged(nameof(this.Caption));
+		//}
 		protected virtual void Content_Set(object content)
 		{
 			this.Content = content;
@@ -38,8 +38,35 @@ namespace Apiary.VM
 
 	}
 
-	class VM_BaseEdit<TMaster, TDetail> : VM_BaseDb 
+	class VM_BaseEdit<T> : VM_BaseDb 
 	{
+		public CM_PropertyItem<T> Properties { get; protected set; }
+		public T Value { get; protected set; }
+
+
+		protected VM_BaseEdit() { }
+		public VM_BaseEdit(CM_PropertyItem<T> properties)
+		{
+			this.Properties_Set(properties);
+		}
+		public VM_BaseEdit(T value)
+		{
+			this.Value = value;
+		}
+
+
+		public void Properties_Set(CM_PropertyItem<T> value)
+		{
+			this.Properties = value;
+			this.OnPropertyChanged(nameof(this.Properties));
+		}
+
+	}
+
+	class VM_BaseEditHierarchy<TMaster, TDetail> : VM_BaseEdit<TDetail>
+	{
+		private Action<TMaster> onSelectMaster = null;
+
 		/// <summary>
 		/// Метка возле списка мастер-объектов
 		/// </summary>
@@ -52,20 +79,39 @@ namespace Apiary.VM
 
 
 		public CM_PropertyItem<TDetail> Properties { get; protected set; }
+		public TDetail Value { get; protected set; }
 
 
-		public VM_BaseEdit(IEnumerable<TMaster> masterList, Action<TMaster> onSelectMaster, string masterCaption = "Выбор объекта : ", CM_PropertyItem<TDetail> properties = null)
+		private VM_BaseEditHierarchy(IEnumerable<TMaster> masterList, Action<TMaster> onSelectMaster, string masterCaption = "Выбор владельца : ")
 		{
-			this.Master_List = new IEnumerablePropertyReadOnly<TMaster>(masterList, onSelectMaster);
+			this.Master_List = new IEnumerablePropertyReadOnly<TMaster>(masterList, this.OnSelectMaster);
+			this.onSelectMaster = onSelectMaster;
+			this.Master_Caption = masterCaption;
+		}
+		public VM_BaseEditHierarchy(IEnumerable<TMaster> masterList, Action<TMaster> onSelectMaster, string masterCaption = "Выбор владельца : ", CM_PropertyItem<TDetail> properties = null)
+			: this(masterList, onSelectMaster, masterCaption)
+		{
 			this.Properties_Set(properties);
+		}
+		public VM_BaseEditHierarchy(IEnumerable<TMaster> masterList, Action<TMaster> onSelectMaster, string masterCaption = "Выбор владельца : ", TDetail value = default(TDetail))
+			: this(masterList, onSelectMaster, masterCaption)
+		{
+			this.Value = value;
 		}
 
 
-		public void Properties_Set(CM_PropertyItem<TDetail> value)
+		private void OnSelectMaster(TMaster value)
 		{
-			this.Properties = value;
-			this.OnPropertyChanged(nameof(this.Properties));
-			this.Caption_Set(this.Caption ?? value.GetType().GetNameFromAttributes());
+			this.onSelectMaster?.Invoke(value);
+			
+			//Обман привязки для обновления полей
+			var val = this.Value;
+			this.Value = default(TDetail);
+			this.OnPropertyChanged(nameof(this.Value));
+			this.Value = val;
+
+			this.OnPropertyChanged(nameof(this.Value));
+			//this.OnPropertyChanged(nameof(this.));
 		}
 	}
 

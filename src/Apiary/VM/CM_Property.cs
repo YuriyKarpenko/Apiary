@@ -7,6 +7,7 @@ using System.Reflection;
 using Apiary.Data;
 
 using IT;
+using Apiary.M;
 
 namespace Apiary.VM
 {
@@ -129,7 +130,7 @@ namespace Apiary.VM
 
 	class CM_PropertyFamily : CM_PropertyBase<IM_PropertyInfo>
 	{
-		public CM_PropertyFamily(IM_Family data) :
+		public CM_PropertyFamily(M_Family data) :
 			base($"Свойства {data.Name}",
 				DB.Instance.S_Family.Get_FamilyInfo(data).Properties,
 				i => i.Name,

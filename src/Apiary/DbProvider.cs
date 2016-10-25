@@ -29,7 +29,7 @@ namespace Apiary
 			this.Debug("()");
 			try
 			{
-				return this.db.S_Dictionary.R_Beehive.List();
+				return M_Family.Beehives = this.db.S_Dictionary.R_Beehive.List();
 			}
 			catch (Exception ex)
 			{
@@ -121,6 +121,21 @@ namespace Apiary
 			try
 			{
 				return this.db.S_Family.R_Family.Get(id).ToModel();
+			}
+			catch (Exception ex)
+			{
+				this.Error(ex, "()");
+				throw;
+			}
+			return null;
+		}
+
+		public IM_FamilyInfo Get_FamilyInfo(IM_Family family)
+		{
+			this.Debug("()");
+			try
+			{
+				return this.db.S_Family.Get_FamilyInfo(family);
 			}
 			catch (Exception ex)
 			{

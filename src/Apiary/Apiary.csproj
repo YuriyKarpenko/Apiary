@@ -91,6 +91,8 @@
     <Compile Include="VM\Base\ICRUD.cs" />
     <Compile Include="VM\Base\VM_Base.cs" />
     <Compile Include="VM\Base\VM_BaseDb.cs" />
+    <Compile Include="VM\PropertyRecord.cs" />
+    <Compile Include="VM\test_properties.cs" />
     <Compile Include="VM\VM_Beehive.cs" />
     <Compile Include="VM\VM_CRUD.cs" />
     <Compile Include="VM\VM_Dialog.cs" />
@@ -113,8 +115,8 @@
     <Compile Include="V\V_Dialog.xaml.cs">
       <DependentUpon>V_Dialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="V\V_SelfList.xaml.cs">
-      <DependentUpon>V_SelfList.xaml</DependentUpon>
+    <Compile Include="V\UC_SelfList.xaml.cs">
+      <DependentUpon>UC_SelfList.xaml</DependentUpon>
     </Compile>
     <Page Include="..\..\..\IT\DictionaryImage.xaml">
       <Link>DictionaryImage.xaml</Link>
@@ -153,7 +155,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="V\V_SelfList.xaml">
+    <Page Include="V\UC_SelfList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

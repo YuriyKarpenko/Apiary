@@ -18,9 +18,9 @@ namespace Apiary.V
 	/// <summary>
 	/// Interaction logic for V_SelfList.xaml
 	/// </summary>
-	public partial class V_SelfList : UserControl
+	public partial class UC_SelfList : UserControl
 	{
-		public V_SelfList()
+		public UC_SelfList()
 		{
 			InitializeComponent();
 		}

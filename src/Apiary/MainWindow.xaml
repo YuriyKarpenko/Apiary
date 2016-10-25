@@ -20,11 +20,11 @@
 		</DataTemplate>-->
 
 		<DataTemplate DataType="{x:Type vm:VM_Beehive}">
-			<v:V_SelfList/>
+			<v:UC_SelfList/>
 		</DataTemplate>
 
 		<DataTemplate DataType="{x:Type vm:VM_Family}">
-			<v:V_SelfList/>
+			<v:UC_SelfList/>
 		</DataTemplate>
 
 		<DataTemplate DataType="{x:Type v:MenuItemEasy}">

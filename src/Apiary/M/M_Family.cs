@@ -14,7 +14,6 @@ namespace Apiary.M
 		public static IEnumerable<IM_Beehive> Beehives { get; set; }
 
 
-		//[Browsable(false)]
 		[Display(Name = "Улей", AutoGenerateField = true, Order = 1)]
 		public long BeehiveId { get; set; }
 
@@ -30,8 +29,9 @@ namespace Apiary.M
 		[Display(Name = "Дата смерти", AutoGenerateField = true, Order = 40)]
 		public DateTime? DeathDay { get; set; }
 
+		[Browsable(false)]
 		[Display(Name = "Улей", AutoGenerateField = true, Order = 1)]
-		public virtual IM_Beehive Beehive => Beehives.SingleOrDefault(i => i.Id == this.BeehiveId);
+		public virtual IM_Beehive Beehive => Beehives?.SingleOrDefault(i => i.Id == this.BeehiveId);
 
 
 		public M_Family()

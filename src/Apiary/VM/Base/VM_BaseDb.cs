@@ -27,22 +27,16 @@ namespace Apiary.VM
 
 	class VM_BaseEdit<T> : VM_BaseDb 
 	{
-		public CM_PropertyItem<T> Properties { get; protected set; }
-		//public T Value { get; protected set; }
-
+		public CM_Property_Value Properties { get; protected set; }
 
 		protected VM_BaseEdit() { }
-		public VM_BaseEdit(CM_PropertyItem<T> properties)
-		{
-			this.Properties_Set(properties);
-		}
 		public VM_BaseEdit(T value)
 		{
-			this.Properties_Set(new VM.CM_PropertyItem<T>(value));
+			this.Properties_Set(new CM_Property_Value(value));
 		}
 
 
-		public void Properties_Set(CM_PropertyItem<T> value)
+		public void Properties_Set(CM_Property_Value value)
 		{
 			this.Properties = value;
 			this.OnPropertyChanged(nameof(this.Properties));
@@ -82,7 +76,7 @@ namespace Apiary.VM
 		public VM_BaseEditHierarchy(IEnumerable<TMaster> masterList, string masterCaption = "Выбор владельца : ", TDetail value = default(TDetail))
 			: this(masterList, masterCaption)
 		{
-			this.Properties_Set(new VM.CM_PropertyItem<TDetail>(value));
+			this.Properties_Set(new VM.CM_Property_Value(value));
 		}
 
 

@@ -29,7 +29,7 @@ namespace Apiary.VM
 		{
 			base.OnMasterSelect(value);
 
-			var prop = new CM_PropertyItem<IM_Beehive>(value);
+			var prop = new CM_Property_Value(value);
 			this.Properties_Set(prop);
 			this.Act_Refresh(null);
 		}
@@ -58,7 +58,8 @@ namespace Apiary.VM
 		protected override void Init_Command_Internal(UserControl uc)
 		{
 			base.Init_Command_Internal(uc);
-
+			//	properties
+			//	families
 			uc.CommandBindings.Add(ApplicationCommands.Delete, this.Act_Delete, e => e.CanExecute = this.Families?.HasSelected ?? false);
 			uc.CommandBindings.Add(Commands.Edit, this.Act_Edit, e => e.CanExecute = this.Families?.HasSelected ?? false);
 			uc.CommandBindings.Add(ApplicationCommands.New, this.Act_New, e => e.CanExecute = this.Master_List.HasSelected);
@@ -90,8 +91,9 @@ namespace Apiary.VM
 			try
 			{
 				var editItem = this.Families.SelectedItem.Family.ToModel();
-				var vm = new VM_BaseEdit<M_Family>(editItem);
-				if (VM_Dialog.Show<V.UC_EditItem>("Редактирование семьи", vm, null))
+				var vm = new CM_Property_Value(editItem);
+				//var vm = new CM_PropertyFamilyInfo(this.Families.SelectedItem);
+				if (VM_Dialog.Show<V.UC_EditItem>("Редактирование семьи", new { Value = editItem }, null))
 					this.db.Set_Family(editItem);
 
 				this.Act_Refresh(e);
@@ -109,7 +111,7 @@ namespace Apiary.VM
 				M_Family newItem = new M_Family();
 				newItem.BeehiveId = this.Master_List.SelectedItem.Id;
 				M_Family.Beehives = this.Master_List.List;
-				var vm = new VM_BaseEdit<M_Family>(newItem);
+				var vm = new CM_Property_Value(newItem);
 				if (VM_Dialog.Show<V.UC_EditItem>("Редактирование семьи", vm, null))
 					this.db.Set_Family(newItem);
 

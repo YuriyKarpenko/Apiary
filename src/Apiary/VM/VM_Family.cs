@@ -10,7 +10,7 @@ using IT.WPF;
 
 namespace Apiary.VM
 {
-	class VM_Family : VM_BaseEditHierarchy<M.M_Family, M.M_Family>
+	class VM_Family : VM_BaseEditHierarchy<M.M_Family, IM_FamilyInfo>
 	{
 
 		public VM_Family()
@@ -22,8 +22,8 @@ namespace Apiary.VM
 		protected override void OnMasterSelect(M_Family value)
 		{
 			base.OnMasterSelect(value);
-			this.Properties_Set(new CM_PropertyItem<M.M_Family>(value));
-			this.Init_Content();
+			this.Properties_Set(new CM_Property_Value(value));
+			this.Init_Content(value);
 		}
 
 
@@ -32,11 +32,16 @@ namespace Apiary.VM
 			base.Init_Internal();
 		}
 
-		private void Init_Content()
+		private void Init_Content(IM_Family family)
 		{
 			if (this.Master_List.HasSelected)
 			{
-
+				var fi = Db.Get_FamilyInfo(family);
+				var prop = fi.Properties
+					.Select(i => new PropertyRecord<string>(i.Value, i.Name))
+					.ToArray();
+				this.Properties_Set(new CM_Property_Value(fi.Family));
+				this.Content_Set(new CM_Property_List(prop));
 			}
 			else
 			{

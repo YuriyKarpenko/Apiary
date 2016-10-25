@@ -18,29 +18,7 @@ namespace Apiary.V
 {
 	public static class GridBehaviour
 	{
-		#region PropertyGrid
-
-		/// <summary>
-		/// Type of value
-		/// </summary>
-		public static readonly DependencyProperty PropertyGrid_TypeProperty = DependencyProperty.RegisterAttached(
-			"PropertyGrid_Type", typeof(Type), typeof(GridBehaviour), new PropertyMetadata(null, PropertyGrid_TypeChangedCallback));
-
-		public static Type GetPropertyGrid_Type(DependencyObject obj) { return (Type)obj.GetValue(PropertyGrid_TypeProperty); }
-
-		public static void SetPropertyGrid_Type(DependencyObject obj, object value) { obj.SetValue(PropertyGrid_TypeProperty, value); }
-
-		static void PropertyGrid_TypeChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			//SetPropertyGrid_Properties(d, null);
-			var gr = d as Grid;
-			if (gr != null && e.OldValue != e.NewValue)
-			{
-				var pp = GetProperties((Type)e.NewValue, true);
-				//SetPropertyGrid_Properties(d, pp);
-				InitGrid(gr, pp);
-			}
-		}
+		#region PropertyGrid_Properties
 
 		/// <summary>
 		/// Properties of value for show
@@ -88,20 +66,20 @@ namespace Apiary.V
 		}
 
 #else
-		public static readonly DependencyProperty PropertyGrid_PropertiesProperty = DependencyProperty.RegisterAttached(
-			"PropertyGrid_Properties", typeof(IEnumerable<object>), typeof(GridBehaviour), new PropertyMetadata(null, PropertyGrid_PropertiesChangedCallback));
+		public static readonly DependencyProperty PropertyGrid_DictionaryProperty = DependencyProperty.RegisterAttached(
+			"PropertyGrid_Dictionary", typeof(IEnumerable<object>), typeof(GridBehaviour), new PropertyMetadata(null, PropertyGrid_DictionaryChangedCallback));
 
-		public static IEnumerable<object> GetPropertyGrid_Properties(DependencyObject obj)
+		public static IEnumerable<object> GetPropertyGrid_Dictionary(DependencyObject obj)
 		{
-			return (IEnumerable<object>)obj.GetValue(PropertyGrid_PropertiesProperty);
+			return (IEnumerable<object>)obj.GetValue(PropertyGrid_DictionaryProperty);
 		}
 
-		public static void SetPropertyGrid_Properties(DependencyObject obj, IEnumerable<object> value)
+		public static void SetPropertyGrid_Dictionary(DependencyObject obj, IEnumerable<object> value)
 		{
-			obj.SetValue(PropertyGrid_PropertiesProperty, value);
+			obj.SetValue(PropertyGrid_DictionaryProperty, value);
 		}
 
-		static void PropertyGrid_PropertiesChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		static void PropertyGrid_DictionaryChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			var gr = d as Grid;
 			var value = e.NewValue as IEnumerable<object>;
@@ -110,20 +88,20 @@ namespace Apiary.V
 				InitGrid(gr, value);
 			}
 		}
+
+#endif
+
 		private static void InitGrid(Grid gr, IEnumerable<object> props)
 		{
 			InitGridBase(gr, row =>
 			{
 				if (props != null)
 				{
-					//var t = typeof(VM.IPropertyRecord<object>);
 					foreach (var prop in props)
 					{
-						var piKey = prop.GetType().GetProperty("Key");
-						var piVal = prop.GetType().GetProperty("Value");
 						gr.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
-						gr.Insert(new TextBlock() { Text = piKey.GetValue(prop) + " :" }, 0, row);
-						var ctrl = GenerateControl(piVal);
+						gr.Insert(new TextBlock() { Text = prop.GetType().GetProperty("Key").GetValue(prop) + " :" }, 0, row);
+						var ctrl = GenerateControl(prop.GetType().GetProperty("Value"));
 						ctrl.DataContext = prop;
 						gr.Insert(ctrl, 2, row);
 						row++;
@@ -133,9 +111,52 @@ namespace Apiary.V
 			});
 		}
 
-#endif
+		#endregion
 
+		#region PropertyGrid_Type
 
+		/// <summary>
+		/// Type of value
+		/// </summary>
+		private static readonly DependencyProperty PropertyGrid_TypeProperty = DependencyProperty.RegisterAttached(
+			"PropertyGrid_Type", typeof(Type), typeof(GridBehaviour), new PropertyMetadata(null, PropertyGrid_TypeChangedCallback));
+
+		private static Type GetPropertyGrid_Type(DependencyObject obj) { return (Type)obj.GetValue(PropertyGrid_TypeProperty); }
+
+		private static void SetPropertyGrid_Type(DependencyObject obj, object value) { obj.SetValue(PropertyGrid_TypeProperty, value); }
+
+		private static void PropertyGrid_TypeChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			var gr = d as Grid;
+			if (gr != null && e.OldValue != e.NewValue)
+			{
+				var pp = GetProperties((Type)e.NewValue, true);
+				//SetPropertyGrid_Properties(d, pp);
+				InitGrid(gr, pp);
+			}
+		}
+
+		private static void InitGrid(Grid gr, IEnumerable<PropertyInfo> props)
+		{
+			InitGridBase(gr, row =>
+			{
+				if (props != null)
+				{
+					foreach (var pi in props)
+					{
+						gr.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
+						gr.Insert(new TextBlock() { Text = pi.GetNameFromAttributes(pi.Name) + " :" }, 0, row);
+						gr.Insert(GenerateControl(pi), 2, row);
+						row++;
+					}
+				}
+				return row;
+			});
+		}
+
+		#endregion
+
+		#region PropertyGrid_Value
 
 		public static readonly DependencyProperty PropertyGrid_ValueProperty = DependencyProperty.RegisterAttached(
 			"PropertyGrid_Value", typeof(object), typeof(GridBehaviour), new PropertyMetadata(null, PropertyGrid_ValueChangedCallback));
@@ -157,44 +178,34 @@ namespace Apiary.V
 			}
 		}
 
+		#endregion
+
+		#region PropertyGrid utils
 
 		private static IEnumerable<PropertyInfo> GetProperties(Type type, bool visableOnly = true)
 		{
-			IEnumerable<PropertyInfo> res = type.GetProperties();
-			if (visableOnly)
+			if (type != null)
 			{
-				var lookups = type.GetCustomAttributes<LookupBindingPropertiesAttribute>(true);
-				res = res
-					.Where(i => lookups.Any(a => a.LookupMember == i.Name) ||
-					(i.GetCustomAttribute<DisplayAttribute>()?.GetAutoGenerateField() ?? true) &&
-					(i.GetCustomAttribute<BrowsableAttribute>()?.Browsable ?? true)
-				);
+				IEnumerable<PropertyInfo> res = type.GetProperties();
+				if (visableOnly)
+				{
+					var lookups = type.GetCustomAttributes<LookupBindingPropertiesAttribute>(true);
+					res = res
+						.Where(i => lookups.Any(a => a.LookupMember == i.Name) ||
+						(i.GetCustomAttribute<DisplayAttribute>()?.GetAutoGenerateField() ?? true) &&
+						(i.GetCustomAttribute<BrowsableAttribute>()?.Browsable ?? true)
+					);
+				}
+				return res?.OrderBy(i => i.GetCustomAttribute<DisplayAttribute>()?.GetOrder() ?? 10);
 			}
-			return res?.OrderBy(i => i.GetCustomAttribute<DisplayAttribute>()?.GetOrder() ?? 10);
+			return null;
 		}
+
 		private static void ClearGrid(Grid gr)
 		{
 			gr.ColumnDefinitions.Clear();
 			gr.RowDefinitions.Clear();
 			gr.Children.Clear();
-		}
-
-		private static void InitGrid(Grid gr, IEnumerable<PropertyInfo> props)
-		{
-			InitGridBase(gr, row =>
-			{
-				if (props != null)
-				{
-					foreach (var pi in props)
-					{
-						gr.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
-						gr.Insert(new TextBlock() { Text = pi.GetNameFromAttributes(pi.Name) + " :" }, 0, row);
-						gr.Insert(GenerateControl(pi), 2, row);
-						row++;
-					}
-				}
-				return row;
-			});
 		}
 
 		private static void InitGridBase(Grid gr, Func<int, int> generateRows)
@@ -231,6 +242,7 @@ namespace Apiary.V
 				gr.Children.Add(el);
 			}
 		}
+
 		private static FrameworkElement GenerateControl(PropertyInfo pi)
 		{
 			var isEnabled = pi?.CanWrite ?? pi.GetAttributeValue<EditableAttribute, bool>(i => i.AllowEdit, true);

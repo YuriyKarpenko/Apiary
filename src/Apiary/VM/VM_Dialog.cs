@@ -10,7 +10,7 @@ namespace Apiary.VM
 {
 	class VM_Dialog : VM_BaseWindow
 	{
-		public static bool Show<TView>(string title, VM_Base vm, Window owner = null, Action<CanExecuteRoutedEventArgs> canSave = null) where TView : FrameworkElement
+		public static bool Show<TView>(string title, object vm, Window owner = null, Action<CanExecuteRoutedEventArgs> canSave = null) where TView : FrameworkElement
 		{
 			Logger.ToLogFmt(null, System.Diagnostics.TraceLevel.Verbose, null, "{0}.()", typeof(VM_Dialog));
 			try

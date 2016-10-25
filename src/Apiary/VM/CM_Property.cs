@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Diagnostics;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
@@ -11,137 +11,56 @@ using Apiary.M;
 
 namespace Apiary.VM
 {
-	public interface IPropertyRecord
-	{
-		string Key { get; }
-	}
-	public interface IPropertyRecord<TValue> : IPropertyRecord
-	{
-		TValue Value { get; }
-	}
 
-	public class PropertyRecord<T, TValue> : IPropertyRecord<TValue>
+	class CM_Property_List
 	{
-		private Func<T, string> GetCaption;
-		private Func<T, TValue> GetValue;
-		private Action<T, TValue> SetValue;
-		private T data;
+		public IPropertyRecord[] List { get; protected set; }
 
-		public string Key => this.GetCaption(data);
-		public TValue Value
+
+		public CM_Property_List(IPropertyRecord[] list)
 		{
-			get { return this.GetValue(data); }
-			set { this.SetValue(data, value); }
-		}
-
-		public PropertyRecord(T data, Func<T, string> getCaption, Func<T, TValue> getValue, Action<T, TValue> setValue)
-		{
-			this.data = data;
-			this.GetCaption = getCaption;
-			this.GetValue = getValue;
-			this.SetValue = setValue;
+			this.List = list;
 		}
 	}
 
-
-
-	class CM_PropertyBase<T> : IT.NotifyPropertyChangedOnly //where T : IEntityBase
+	class CM_Property_Value
 	{
-		public IPropertyRecord[] List { get; private set; }
+		public object Value { get; private set; }
 
-		public CM_PropertyBase(string caption, List<T> data, Func<T, string> getCaption, Func<T, string> getValue, Action<T, string> setValue)
+
+		public CM_Property_Value(object value)
 		{
-			this.List = data.Select(i => new PropertyRecord<T, string>(i, getCaption, getValue, setValue)).ToArray();
+			this.Value = value;
+			//this.Value_Set(data);
 		}
 
+
+		//protected virtual void Value_Set(TBase value)
+		//{
+		//	this.Value = value;
+		//}
+		//protected virtual IEnumerable<IPropertyRecord> GenerateItems(TBase value)
+		//{
+		//	return GenerateItems<TBase>(value);
+		//}
 	}
 
-	class CM_PropertyItem<T> 
-	{
-		static List<PropertyInfo> GetProperties()
-		{
-			var res = typeof(T).GetProperties(true);
-			return res
-				.Where(i => i.CanWrite)
-				.OrderBy(i => i.GetCustomAttribute<DisplayAttribute>()?.GetOrder() ?? 10)
-				.ToList();
-		}
+	//class CM_PropertyFamilyInfo : CM_PropertyItem<IM_FamilyInfo>
+	//{
+	//	public CM_PropertyFamilyInfo(IM_FamilyInfo data, IPropertyRecord[] props = null) : base(data, props == null, false)
+	//	{
+	//		this.List = props;
+	//	}
 
-		static string GetCaption(MemberInfo value)
-		{
-			return value.GetNameFromAttributes(value.Name);
-		}
-
-		private T value;
-
-		public T Value { get; private set; }
-
-#if dic
-		public KeyValuePair<string, object>[] List { get; private set; }
-#else
-		public IPropertyRecord<object>[] List { get; private set; }
-#endif
-
-		public CM_PropertyItem(T data) 
-		{
-			this.value = data;
-			//this.Value = data;
-			var props = GetProperties();
-#if dic
-			this.List = props
-				.Select(i => new KeyValuePair<string, object>(i.GetNameFromAttributes(i.Name), i.GetValue(data, null)))
-				.ToArray();
-#else
-			this.List = props.Select(i => this.GenerateItem(i)).ToArray();
-#endif
-
-		}
-
-
-		private IPropertyRecord<object> GenerateItem(MemberInfo value)
-		{
-			return new PropertyRecord<MemberInfo, object>(value, GetCaption, this.GetValue<object>, SetValue<object>);
-		}
-
-		private TValue GetValue<TValue>(MemberInfo value)
-		{
-			if (value is FieldInfo)
-				return (TValue)(value as FieldInfo).GetValue(this.value);
-			if (value is PropertyInfo)
-				return (TValue)(value as PropertyInfo).GetValue(this.value);
-			return default(TValue);
-		}
-
-		private void SetValue<TValue>(MemberInfo value, TValue v)
-		{
-			object vv;
-			switch (value.MemberType)
-			{
-				case MemberTypes.Field:
-					var vf = value as FieldInfo;
-					vv = Convert.ChangeType(v, vf.FieldType);
-					vf.SetValue(this.value, vv);
-					break;
-
-				case MemberTypes.Property:
-					var vp = value as PropertyInfo;
-					vv = Convert.ChangeType(v, vp.PropertyType);
-					vp.SetValue(this.value, vv);
-					break;
-			}
-		}
-	}
-
-	class CM_PropertyFamily : CM_PropertyBase<IM_PropertyInfo>
-	{
-		public CM_PropertyFamily(M_Family data) :
-			base($"Свойства {data.Name}",
-				DB.Instance.S_Family.Get_FamilyInfo(data).Properties,
-				i => i.Name,
-				i => i.Value,
-				(i, v) => i.Value = v)
-		{
-
-		}
-	}
+	//	protected override IEnumerable<IPropertyRecord> GenerateItems(IM_FamilyInfo value)
+	//	{
+	//		var res1 = GenerateItems(value.Family);
+	//		var res2 = new List<IPropertyRecord>();
+	//		foreach (var p in value.Properties)
+	//		{
+	//			res2.Add(new PropertyRecord<string>(p.Value, p.Name));
+	//		}
+	//		return res1.Union(res2);
+	//	}
+	//}
 }

@@ -29,7 +29,10 @@ namespace Apiary
 			this.Debug("()");
 			try
 			{
-				return M_Family.Beehives = this.db.S_Dictionary.R_Beehive.List();
+				return M_Family.Beehives = this.db.S_Dictionary.R_Beehive.List(false)
+					.ToModel()
+					.ToArray()
+					;
 			}
 			catch (Exception ex)
 			{
@@ -44,7 +47,7 @@ namespace Apiary
 			try
 			{
 				var i = this.db.S_Dictionary.R_Beehive.Set(value);
-				M_Family.Beehives = value;
+				M_Family.Beehives = value.ToModel();
 			}
 			catch (Exception ex)
 			{
@@ -125,7 +128,6 @@ namespace Apiary
 			catch (Exception ex)
 			{
 				this.Error(ex, "()");
-				throw;
 			}
 			return null;
 		}
@@ -140,41 +142,10 @@ namespace Apiary
 			catch (Exception ex)
 			{
 				this.Error(ex, "()");
-				throw;
 			}
 			return null;
 		}
 
-		//public M.M_Family Get_FamilyByBeehive(IM_Beehive beehive)
-		//{
-		//	this.Debug("()");
-		//	try
-		//	{
-
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		this.Error(ex, "()");
-		//		throw;
-		//	}
-		//	return null;
-		//}
-
-		public IEnumerable<IM_FamilyInfo> Get_FamilyInfoByBeehive(IM_Beehive beehive)
-		{
-			this.Debug("()");
-			try
-			{
-				if (beehive != null)
-					return this.db.S_Family.Get_ByBeehive(beehive);
-			}
-			catch (Exception ex)
-			{
-				this.Error(ex, "()");
-				throw;
-			}
-			return null;
-		}
 
 		public IEnumerable<M.M_Family> List_Family(bool withHidden = false)
 		{
@@ -191,7 +162,41 @@ namespace Apiary
 			}
 		}
 
-		public int Set_Family(M.M_Family value)
+		public IEnumerable<M.M_Family> List_Family_ByBeehive(IM_Beehive beehive)
+		{
+			this.Debug("()");
+			try
+			{
+				if (beehive != null)
+				{
+					var res = this.db.S_Family.R_Family.Get_ByBeehive(beehive);
+					return res.ToModel();
+				}
+			}
+			catch (Exception ex)
+			{
+				this.Error(ex, "()");
+			}
+			return null;
+		}
+
+		public IEnumerable<IM_FamilyInfo> List_FamilyInfo_ByBeehive(IM_Beehive beehive)
+		{
+			this.Debug("()");
+			try
+			{
+				if (beehive != null)
+					return this.db.S_Family.Get_ByBeehive(beehive);
+			}
+			catch (Exception ex)
+			{
+				this.Error(ex, "()");
+			}
+			return null;
+		}
+
+
+		public int Set_Family(IM_Family value)
 		{
 			this.Debug("()");
 			try
@@ -204,6 +209,7 @@ namespace Apiary
 				throw;
 			}
 		}
+
 		#endregion
 
 	}

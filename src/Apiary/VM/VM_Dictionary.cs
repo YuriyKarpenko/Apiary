@@ -11,7 +11,7 @@ using IT.WPF;
 
 namespace Apiary.VM
 {
-	class VM_Dictionary<T> : VM_BaseDb //where T : M_Base//, new()
+	class VM_Dictionary<T> : VM_BaseContent //where T : M_Base//, new()
 	{
 		private Action<T> onDelete = null;
 
@@ -20,7 +20,6 @@ namespace Apiary.VM
 
 
 		public VM_Dictionary(IEnumerable<T> list, Action<T> onDelete)
-			//: base(typeof(T).GetAttributeValueStr<DescriptionAttribute>(a => a.Description))
 		{
 			Contract.NotNull(list, "list");
 

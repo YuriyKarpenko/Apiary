@@ -10,9 +10,8 @@ using IT.WPF;
 
 namespace Apiary.VM
 {
-	class VM_BaseDb : VM_Base
+	class VM_BaseContent : VM_Base
 	{
-		protected static DbProvider Db = DbProvider.Instance;
 		protected readonly DbProvider db = Db;
 
 		public object Content { get; private set; }
@@ -25,7 +24,7 @@ namespace Apiary.VM
 		}
 	}
 
-	class VM_BaseEdit<T> : VM_BaseDb 
+	class VM_BaseEdit<T> : VM_BaseContent 
 	{
 		public CM_Property_Value Properties { get; protected set; }
 

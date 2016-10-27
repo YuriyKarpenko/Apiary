@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 using Apiary.Data;
 using Apiary.M;
-using Apiary.V;
 using IT;
 using IT.WPF;
 
 namespace Apiary.VM
 {
-	class VM_Main : VM_BaseDb
+	class VM_Main : VM_BaseContent
 	{
 		private readonly MemCache<object, VM_Base> vms = new MemCache<object, VM_Base>();
 		//public Menu MainMenu { get; private set; }
 		public object[] MainMenu { get; private set; }
-		public MenuItemEasy[] Menu_Dic { get; private set; }
 
 		public VM_Main()
 		{
@@ -28,15 +25,6 @@ namespace Apiary.VM
 
 		void Init_Menu()
 		{
-			this.Menu_Dic = new MenuItemEasy[]{
-				new MenuItemEasy("Справочники",
-					new ICommand[] { Commands.Dic_Operation, Commands.Dic_FamilyProperty }
-				),
-				new MenuItemEasy("Справочники",
-					new ICommand[] { Commands.Dic_Operation, Commands.Dic_FamilyProperty }
-				),
-			};
-
 			this.MainMenu = new object[]/*MenuItem[]*/{
 				new MenuItem(){Header = "Справочники",
 					Items = {
@@ -49,10 +37,6 @@ namespace Apiary.VM
 				new MenuItem(){ Command = Commands.Family },
 				new MenuItem(){ Command = ApplicationCommands.Replace },
 				new MenuItem(){ Command = ApplicationCommands.Open },
-				new MenuItemEasy[]{
-				new MenuItemEasy("Справочники",
-					new ICommand[] { Commands.Dic_Operation, Commands.Dic_FamilyProperty }
-				) },
 			};
 		}
 
@@ -73,18 +57,18 @@ namespace Apiary.VM
 
 		}
 
-		void Act_New(ExecutedRoutedEventArgs e)
+		private void Act_New(ExecutedRoutedEventArgs e)
 		{
 			DB.Instance.CreateDb();
 		}
 
-		void Act_Open(ExecutedRoutedEventArgs e)
+		private void Act_Open(ExecutedRoutedEventArgs e)
 		{
 			var item = new M_Family() { BeehiveId = 1, Comment = "Comment1", Name = "Fam 1" };
 			db.Set_Family(item);
 		}
 
-		void Act_Dictionary(ExecutedRoutedEventArgs e)
+		private void Act_Dictionary(ExecutedRoutedEventArgs e)
 		{
 			this.Debug("({0})", e.Parameter);
 			try
@@ -126,12 +110,12 @@ namespace Apiary.VM
 			}
 		}
 
-		void Act_Beehive(ExecutedRoutedEventArgs e)
+		private void Act_Beehive(ExecutedRoutedEventArgs e)
 		{
 			this.Content_Set(new VM_Beehive(e.Parameter?.ToString().To<long>()));
 		}
 
-		void Act_Family(ExecutedRoutedEventArgs e)
+		private void Act_Family(ExecutedRoutedEventArgs e)
 		{
 			this.Content_Set(new VM_Family());
 		}

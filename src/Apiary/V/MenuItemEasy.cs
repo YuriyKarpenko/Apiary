@@ -7,15 +7,16 @@ namespace Apiary.V
 	class MenuItemEasy
 	{
 		public string Header { get; set; }
-		public ICommand Command { get; set; }
+		public RoutedUICommand Command { get; set; }
 		public IEnumerable<MenuItemEasy> Items { get; set; }
 
-		public MenuItemEasy(ICommand cmd)
+		public MenuItemEasy(RoutedUICommand cmd)
 		{
 			this.Command = cmd;
+			this.Header = cmd.Text;
 		}
 
-		public MenuItemEasy(string header, IEnumerable<ICommand> cmds)
+		public MenuItemEasy(string header, IEnumerable<RoutedUICommand> cmds)
 		{
 			this.Header = header;
 			this.Items = cmds.Select(i => new MenuItemEasy(i));

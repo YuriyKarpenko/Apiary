@@ -63,7 +63,7 @@ namespace Apiary.Data.Servise
 			this.Debug("()");
 			try
 			{
-				var res = this.R_Family.GetByBeehive(beehive);
+				var res = this.R_Family.Get_ByBeehive(beehive);
 				return res.Select(i => this.Get_FamilyInfo(i));
 			}
 			catch (Exception ex)

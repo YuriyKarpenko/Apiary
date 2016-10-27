@@ -56,7 +56,7 @@ namespace Apiary.Data.Model
 		[Browsable(false)]
 		public DateTime Modified { get; set; }
 
-		[Display(AutoGenerateField = true, Name = "Сктыть", Order = 100)]
+		[Display(AutoGenerateField = true, Name = "Скрыть", Order = 100)]
 		[Browsable(true)]
 		public bool Hide { get; set; }
 

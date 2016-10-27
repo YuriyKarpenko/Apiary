@@ -15,7 +15,7 @@ namespace Apiary.VM
 {
 	class VM_Beehive : VM_BaseEditHierarchy<IM_Beehive, IM_Beehive>
 	{
-		public IEnumerableProperty<IM_FamilyInfo> Families { get; private set; }
+		public IEnumerableProperty<M_Family> Families { get; private set; }
 
 
 		public VM_Beehive(long? id)
@@ -24,6 +24,7 @@ namespace Apiary.VM
 			if (id.HasValue)
 				this.Master_List?.Select(i => i.Id == id.Value, true);
 		}
+
 
 		protected override void OnMasterSelect(IM_Beehive value)
 		{
@@ -37,17 +38,18 @@ namespace Apiary.VM
 		protected override void Init_Internal()
 		{
 			base.Init_Internal();
-			this.Families = new IEnumerableProperty<IM_FamilyInfo>(Family_Get, this.Family_Select);
+			this.Families = new IEnumerableProperty<M_Family>(Family_Get, this.Family_Select);
 			this.Content_Set(this.Families);
 		}
 
 
-		private IEnumerable<IM_FamilyInfo> Family_Get()
+		private IEnumerable<M_Family> Family_Get()
 		{
-			var res = this.db.Get_FamilyInfoByBeehive(this.Master_List.SelectedItem)?.ToArray();
+			var res = this.db.List_Family_ByBeehive(this.Master_List.SelectedItem)?.ToArray();
 			return res;
 		}
-		private void Family_Select(IM_FamilyInfo value)
+
+		private void Family_Select(IM_Family value)
 		{
 
 		}
@@ -70,7 +72,7 @@ namespace Apiary.VM
 		{
 			try
 			{
-				var editItem = this.Families.SelectedItem.Family.ToModel();
+				var editItem = this.Families.SelectedItem;
 				if (MsgDlg($"Семья {editItem} умерла ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
 				{
 					editItem.DeathDay = DateTime.Now;
@@ -90,7 +92,7 @@ namespace Apiary.VM
 		{
 			try
 			{
-				var editItem = this.Families.SelectedItem.Family.ToModel();
+				var editItem = this.Families.SelectedItem;
 				var vm = new CM_Property_Value(editItem);
 				//var vm = new CM_PropertyFamilyInfo(this.Families.SelectedItem);
 				if (VM_Dialog.Show<V.UC_EditItem>("Редактирование семьи", new { Value = editItem }, null))
@@ -110,7 +112,6 @@ namespace Apiary.VM
 			{
 				M_Family newItem = new M_Family();
 				newItem.BeehiveId = this.Master_List.SelectedItem.Id;
-				M_Family.Beehives = this.Master_List.List;
 				var vm = new CM_Property_Value(newItem);
 				if (VM_Dialog.Show<V.UC_EditItem>("Редактирование семьи", vm, null))
 					this.db.Set_Family(newItem);
@@ -127,8 +128,7 @@ namespace Apiary.VM
 		{
 			try
 			{
-				var data = this.Family_Get();
-				this.Families.Reset(data);
+				this.Families.Reset();
 			}
 			catch (Exception ex)
 			{

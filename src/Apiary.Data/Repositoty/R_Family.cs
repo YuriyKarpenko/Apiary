@@ -9,7 +9,7 @@ namespace Apiary.Data.Repositoty
 {
 	public interface IR_Family : IRepositoryDic<IM_Family>
 	{
-		IEnumerable<IM_Family> GetByBeehive(IM_Beehive beehive);
+		IEnumerable<IM_Family> Get_ByBeehive(IM_Beehive beehive);
 	}
 
 	class R_Family : RepositoryBaseDic<M_Family, IM_Family>, IR_Family
@@ -28,7 +28,7 @@ namespace Apiary.Data.Repositoty
 		//}
 #endif
 
-		public IEnumerable<IM_Family> GetByBeehive(IM_Beehive beehive)
+		public IEnumerable<IM_Family> Get_ByBeehive(IM_Beehive beehive)
 		{
 			Contract.NotNull(beehive, "beehive");
 			this.Debug("()");

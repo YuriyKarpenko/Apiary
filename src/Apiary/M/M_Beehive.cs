@@ -19,6 +19,11 @@ namespace Apiary.M
 		[MaxLength(255), StringLength(255), Display(Name = "Коментарий", Order = 30)]
 		public string Comment { get; set; }
 
+
+		public override string ToString()
+		{
+			return $"{this.Name}; {this.Address}";
+		}
 	}
 
 	static class IM_Beehive_Extentions

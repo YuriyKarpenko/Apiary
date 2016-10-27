@@ -85,6 +85,7 @@
     </ApplicationDefinition>
     <Compile Include="DbProvider.cs" />
     <Compile Include="M\M_Base.cs" />
+    <Compile Include="M\M_Beehive.cs" />
     <Compile Include="M\M_Family.cs" />
     <Compile Include="M\M_Property.cs" />
     <Compile Include="VM\CM_Property.cs" />
@@ -92,7 +93,6 @@
     <Compile Include="VM\Base\VM_Base.cs" />
     <Compile Include="VM\Base\VM_BaseDb.cs" />
     <Compile Include="VM\PropertyRecord.cs" />
-    <Compile Include="VM\test_properties.cs" />
     <Compile Include="VM\VM_Beehive.cs" />
     <Compile Include="VM\VM_CRUD.cs" />
     <Compile Include="VM\VM_Dialog.cs" />
@@ -102,7 +102,7 @@
     <Compile Include="VM\VM_Settings.cs" />
     <Compile Include="VM\Commands.cs" />
     <Compile Include="V\GridBehaviour.cs" />
-    <Compile Include="V\MenuItemEasy.cs" />
+    <Compile Include="VM\TemplateSelectors.cs" />
     <Compile Include="V\UC_Dictionary.xaml.cs">
       <DependentUpon>UC_Dictionary.xaml</DependentUpon>
     </Compile>

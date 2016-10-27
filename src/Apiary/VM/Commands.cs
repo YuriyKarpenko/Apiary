@@ -1,4 +1,6 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Globalization;
+using System.Windows.Input;
 
 namespace Apiary.VM
 {
@@ -19,6 +21,30 @@ namespace Apiary.VM
 
 		static Commands()
 		{
+		}
+	}
+
+	class Cmd2Image : System.Windows.Data.IValueConverter
+	{
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			var cmd = value as RoutedCommand;
+			if(cmd != null)
+			{
+				switch (cmd.Name)
+				{
+					case "Save":
+						return App.Current.FindResource("img_Save");
+					case "Edit":
+						return App.Current.FindResource("img_Edit");
+				}
+			}
+			return null;
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

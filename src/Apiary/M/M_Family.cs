@@ -11,7 +11,7 @@ namespace Apiary.M
 	class M_Family : M_Base, IM_Family
 	{
 		[Browsable(false)]
-		public static IEnumerable<IM_Beehive> Beehives { get; set; }
+		public static IEnumerable<M_Beehive> Beehives { get; set; }
 
 
 		[Display(Name = "Улей", AutoGenerateField = true, Order = 1)]
@@ -31,7 +31,7 @@ namespace Apiary.M
 
 		[Browsable(false)]
 		[Display(Name = "Улей", AutoGenerateField = true, Order = 1)]
-		public virtual IM_Beehive Beehive => Beehives?.SingleOrDefault(i => i.Id == this.BeehiveId);
+		public virtual M_Beehive Beehive => Beehives?.SingleOrDefault(i => i.Id == this.BeehiveId);
 
 
 		public M_Family()

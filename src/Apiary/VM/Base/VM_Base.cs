@@ -12,6 +12,8 @@ namespace Apiary.VM
 	{
 		#region static
 
+		protected static DbProvider Db = DbProvider.Instance;
+
 		static VM_Base()
 		{
 			try

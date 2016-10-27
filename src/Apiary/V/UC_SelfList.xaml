@@ -14,38 +14,19 @@
 			 mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="400">
 	<UserControl.Resources>
-		<!--<DataTemplate DataType="{x:Type RoutedUICommand}">
-			<Button Style="{StaticResource cmd_v}" Command="{Binding .}" Content="{Binding . }"/>
-		</DataTemplate>-->
-
-		<DataTemplate DataType="{x:Type m:M_Family}">
-			<Label>
-				<Run Text="{Binding Name}"/>
-			</Label>
+		<DataTemplate DataType="{x:Type RoutedUICommand}">
+			<Button Style="{StaticResource cmd_h}" Command="{Binding .}" Content="{Binding ., Converter={StaticResource Cmd2Image}}"/>
 		</DataTemplate>
-		
+
 		<DataTemplate DataType="{x:Type data:IM_FamilyInfo}">
 			<Label>
-				<Run Text="{Binding Family.Name}"/>
+				<Run Foreground="Green" Text="{Binding Family.Name}"/>
 			</Label>
 		</DataTemplate>
-
-		<DataTemplate DataType="{x:Type vm:CM_Property_List}">
-			<Grid v:GridBehaviour.PropertyGrid_Dictionary="{Binding List}">
-			</Grid>
-		</DataTemplate>
-
-		<DataTemplate DataType="{x:Type vm:CM_Property_Value}">
-			<Grid v:GridBehaviour.PropertyGrid_Value="{Binding Value}">
-			</Grid>
-		</DataTemplate>
 		
-		<DataTemplate DataType="{x:Type it_wpf:IEnumerableProperty`1}">
-			<v:UC_ListView/>
-		</DataTemplate>
 	</UserControl.Resources>
-	
-    <Grid>
+
+	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="auto"/>
 			<ColumnDefinition Width="5"/>
@@ -59,7 +40,13 @@
 				<ComboBox ItemsSource="{Binding Master_List.List}" SelectedItem="{Binding Master_List.SelectedItem}" MinWidth="100"/>
 			</StackPanel>
 
-			<ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding Footer}" Name="Footer"/>
+			<ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding Footer}" Name="Footer">
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<WrapPanel/>
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+			</ItemsControl>
 
 			<ContentControl Content="{Binding Properties}" x:Name="Left_Content"/>
 
@@ -77,7 +64,7 @@
 				<!--<Button Style="{StaticResource cmd_h}" Command="Save" Content="{StaticResource img_Save}"/>-->
 			</ToolBar>
 			
-			<ContentControl Content="{Binding Content}" x:Name="Right_Content"/>
+			<ContentControl Content="{Binding Content}" x:Name="Right_Content" ContentTemplateSelector="{StaticResource ContentTemplateSelector}"/>
 		</DockPanel>
 		
 	</Grid>

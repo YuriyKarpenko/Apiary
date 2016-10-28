@@ -101,7 +101,7 @@ namespace Apiary.V
 					{
 						gr.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
 						gr.Insert(new TextBlock() { Text = prop.GetType().GetProperty("Key").GetValue(prop) + " :" }, 0, row);
-						var ctrl = GenerateControl(prop.GetType().GetProperty("Value"));
+						var ctrl = Grid_GenerateControl(prop.GetType().GetProperty("Value"));
 						ctrl.DataContext = prop;
 						gr.Insert(ctrl, 2, row);
 						row++;
@@ -146,7 +146,7 @@ namespace Apiary.V
 					{
 						gr.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
 						gr.Insert(new TextBlock() { Text = pi.GetNameFromAttributes(pi.Name) + " :" }, 0, row);
-						gr.Insert(GenerateControl(pi), 2, row);
+						gr.Insert(Grid_GenerateControl(pi), 2, row);
 						row++;
 					}
 				}
@@ -233,6 +233,166 @@ namespace Apiary.V
 		}
 
 
+        #endregion
+
+
+        #region Pivot_ColHeaders
+
+        public static readonly DependencyProperty Pivot_ColHeadersProperty = DependencyProperty.RegisterAttached(
+            "Pivot_ColHeaders", typeof(string[]), typeof(GridBehaviour), new PropertyMetadata(null, Pivot_ColHeadersChangedCallback));
+
+        public static string[] GetPivot_ColHeaders(DependencyObject d)
+        {
+            return (string[])d.GetValue(Pivot_ColHeadersProperty);
+        }
+
+        public static void SetPivot_ColHeaders(DependencyObject d, string[] value)
+        {
+            d.SetValue(Pivot_ColHeadersProperty, value);
+        }
+
+        static void Pivot_ColHeadersChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Pivot_Init(d);
+        }
+
+        #endregion
+
+        #region Pivot_RowHeaders
+
+        public static readonly DependencyProperty Pivot_RowHeadersProperty = DependencyProperty.RegisterAttached(
+            "Pivot_RowHeaders", typeof(string[]), typeof(GridBehaviour), new PropertyMetadata(null, Pivot_RowHeadersChangedCallback));
+
+        public static string[] GetPivot_RowHeaders(DependencyObject d)
+        {
+            return (string[])d.GetValue(Pivot_RowHeadersProperty);
+        }
+
+        public static void SetPivot_RowHeaders(DependencyObject d, string[] value)
+        {
+            d.SetValue(Pivot_RowHeadersProperty, value);
+        }
+
+        static void Pivot_RowHeadersChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Pivot_Init(d);
+        }
+
+        #endregion
+
+        #region Pivot_Result
+
+        public static readonly DependencyProperty Pivot_ResultProperty = DependencyProperty.RegisterAttached(
+            "Pivot_Result", typeof(string), typeof(GridBehaviour), new PropertyMetadata(null, Pivot_ResultChangedCallback));
+
+        public static string GetPivot_Result(DependencyObject d)
+        {
+            return (string)d.GetValue(Pivot_ResultProperty);
+        }
+
+        public static void SetPivot_Result(DependencyObject d, string value)
+        {
+            d.SetValue(Pivot_ResultProperty, value);
+        }
+
+        static void Pivot_ResultChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Pivot_Init(d);
+        }
+
+        #endregion
+
+        #region Pivot_Data
+
+        public static readonly DependencyProperty Pivot_DataProperty = DependencyProperty.RegisterAttached(
+            "Pivot_Data", typeof(IEnumerable<object>), typeof(GridBehaviour), new PropertyMetadata(null, Pivot_DataChangedCallback));
+
+        public static IEnumerable<object> GetPivot_Data(DependencyObject obj)
+        {
+            return (IEnumerable<object>)obj.GetValue(Pivot_DataProperty);
+        }
+
+        public static void SetPivot_Data(DependencyObject obj, IEnumerable<object> value)
+        {
+            obj.SetValue(Pivot_DataProperty, value);
+        }
+
+        static void Pivot_DataChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Pivot_Init(d);
+        }
+
+        #endregion
+
+        #region Pivot utils 
+
+        private static void Pivot_Init(DependencyObject d)
+        {
+            var colsH = GetPivot_ColHeaders(d);
+            var rowsH = GetPivot_RowHeaders(d);
+            var result = GetPivot_Result(d);
+            var rawData = GetPivot_Data(d);
+            var g = d as Grid;
+            if(g != null && colsH != null && rowsH != null && !string.IsNullOrEmpty(result)  && rawData != null)
+            {
+                var t = rawData.FirstOrDefault()?.GetType();
+                if (t != null)
+                {
+                    var pp = t.GetProperties();
+                    var rowsData = new List<pivotData>();
+                    foreach (var v in rawData)
+                    {
+                        var cols = colsH
+                            .Join(pp, c => c, p => p.Name, (c, p) => (string)p.GetValue(v))
+                            .ToArray();
+                        var rows = rowsH
+                            .Join(pp, c => c, p => p.Name, (c, p) => (string)p.GetValue(v))
+                            .ToArray();
+                        var value = pp.FirstOrDefault(i => i.Name == result);
+                        rowsData.Add(new pivotData(cols, rows, value));
+                    }
+
+                    var colHeaders = rowsData
+                        .Select(i => i.ColHeaders)
+                        .Distinct()
+                        .ToArray();
+                    var rowsHeaders = rowsData
+                        .Select(i => i.RowHeaders)
+                        .Distinct()
+                        .ToArray();
+
+                    foreach(var ch in colHeaders)
+                    {
+                        var c = rowsH.Count();
+                        foreach(var rh in rowsHeaders)
+                        {
+
+                        }
+                    }
+                }
+            }
+        }
+
+        struct pivotData
+        {
+            public string[] ColHeaders;
+            public string[] RowHeaders;
+            public object Value;
+
+            public pivotData(string[] cols, string[] rows, object val)
+            {
+                this.ColHeaders = cols;
+                this.RowHeaders = rows;
+                this.Value = val;
+            }
+        }
+
+        #endregion
+
+
+
+        #region Grid utils
+
 		private static void Insert(this Grid gr, UIElement el, int col, int row)
 		{
 			if (gr != null && el != null)
@@ -243,7 +403,7 @@ namespace Apiary.V
 			}
 		}
 
-		private static FrameworkElement GenerateControl(PropertyInfo pi)
+		private static FrameworkElement Grid_GenerateControl(PropertyInfo pi)
 		{
 			var isEnabled = pi?.CanWrite ?? pi.GetAttributeValue<EditableAttribute, bool>(i => i.AllowEdit, true);
 			FrameworkElement res = null;
@@ -303,6 +463,7 @@ namespace Apiary.V
 			return res;
 		}
 
-		#endregion
-	}
+
+        #endregion
+    }
 }

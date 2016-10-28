@@ -98,7 +98,10 @@
     <Compile Include="VM\VM_Dialog.cs" />
     <Compile Include="VM\VM_Dictionary.cs" />
     <Compile Include="VM\VM_Family.cs" />
+    <Compile Include="VM\VM_FamilyHistory.cs" />
+    <Compile Include="VM\VM_Global.cs" />
     <Compile Include="VM\VM_Main.cs" />
+    <Compile Include="VM\VM_OperationEdit.cs" />
     <Compile Include="VM\VM_Settings.cs" />
     <Compile Include="VM\Commands.cs" />
     <Compile Include="V\GridBehaviour.cs" />

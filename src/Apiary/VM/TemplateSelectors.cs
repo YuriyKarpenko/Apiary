@@ -6,10 +6,6 @@ using System.Windows.Controls;
 
 namespace Apiary.VM
 {
-	class TemplateSelectors
-	{
-	}
-
 	class ContentTemplateSelector : DataTemplateSelector
 	{
 		public override DataTemplate SelectTemplate(object item, DependencyObject container)

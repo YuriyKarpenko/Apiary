@@ -24,6 +24,18 @@ namespace Apiary.VM
 		}
 	}
 
+	class CommandModel
+	{
+		public ICommand Command { get; private set; }
+		public object CommandParameter { get; private set; }
+
+		public CommandModel(ICommand command, object commandParameter = null)
+		{
+			this.Command = command;
+			this.CommandParameter = commandParameter;
+		}
+	}
+
 	class Cmd2Image : System.Windows.Data.IValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

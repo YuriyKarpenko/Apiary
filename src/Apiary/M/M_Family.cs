@@ -15,19 +15,39 @@ namespace Apiary.M
 
 
 		[Display(Name = "Улей", AutoGenerateField = true, Order = 1)]
-		public long BeehiveId { get; set; }
+		public long BeehiveId
+		{
+			get { return this.Get<long>("BeehiveId"); }
+			set { this.Set("BeehiveId", value); }
+		}
 
 		[Display(Name = "Название", AutoGenerateField = true, Order = 10)]
-		public string Name { get; set; }
+		public string Name
+		{
+			get { return this.Get<string>("Name"); }
+			set { this.Set("Name", value); }
+		}
 
 		[Display(Name = "Дата рождения", AutoGenerateField = true, Order = 20)]
-		public DateTime BirthDay { get; set; }
+		public DateTime BirthDay
+		{
+			get { return this.Get<DateTime>("BirthDay"); }
+			set { this.Set("BirthDay", value); }
+		}
 
 		[Display(Name = "Коментарий", AutoGenerateField = true, Order = 30)]
-		public string Comment { get; set; }
+		public string Comment
+		{
+			get { return this.Get<string>("Comment"); }
+			set { this.Set("Comment", value); }
+		}
 
 		[Display(Name = "Дата смерти", AutoGenerateField = true, Order = 40)]
-		public DateTime? DeathDay { get; set; }
+		public DateTime? DeathDay
+		{
+			get { return this.Get<DateTime?>("DeathDay"); }
+			set { this.Set("DeathDay", value); }
+		}
 
 		[Browsable(false)]
 		[Display(Name = "Улей", AutoGenerateField = true, Order = 1)]
@@ -51,6 +71,7 @@ namespace Apiary.M
 		{
 			var res = new M_Family();
 			IT.UtilsReflection.ClonePropertyTo(value, res);
+			res.HasModified = false;
 			return res;
 		}
 

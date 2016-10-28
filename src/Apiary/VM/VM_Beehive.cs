@@ -13,7 +13,7 @@ using Apiary.M;
 
 namespace Apiary.VM
 {
-	class VM_Beehive : VM_BaseEditHierarchy<IM_Beehive, IM_Beehive>
+	class VM_Beehive : VM_BaseEditHierarchy<M_Beehive, M_Beehive>
 	{
 		public IEnumerableProperty<M_Family> Families { get; private set; }
 
@@ -26,7 +26,7 @@ namespace Apiary.VM
 		}
 
 
-		protected override void OnMasterSelect(IM_Beehive value)
+		protected override void OnMasterSelect(M_Beehive value)
 		{
 			base.OnMasterSelect(value);
 
@@ -40,6 +40,7 @@ namespace Apiary.VM
 			base.Init_Internal();
 			this.Families = new IEnumerableProperty<M_Family>(Family_Get, this.Family_Select);
 			this.Content_Set(this.Families);
+			this.Footer_Set(new[] { new CommandModel(ApplicationCommands.Save) });
 		}
 
 
@@ -57,6 +58,17 @@ namespace Apiary.VM
 
 		#region actions
 
+		protected override void Act_Save_Internal(ExecutedRoutedEventArgs e)
+		{
+			base.Act_Save_Internal(e);
+
+			this.db.Set_Beehive(new[] { this.Master_List.SelectedItem });
+		}
+		protected override void Can_Save_Internal(CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = this.Master_List.SelectedItem?.HasModified ?? false;
+		}
+
 		protected override void Init_Command_Internal(UserControl uc)
 		{
 			base.Init_Command_Internal(uc);
@@ -67,6 +79,7 @@ namespace Apiary.VM
 			uc.CommandBindings.Add(ApplicationCommands.New, this.Act_New, e => e.CanExecute = this.Master_List.HasSelected);
 			uc.CommandBindings.Add(NavigationCommands.Refresh, this.Act_Refresh);
 		}
+
 
 		private void Act_Delete(ExecutedRoutedEventArgs e)
 		{

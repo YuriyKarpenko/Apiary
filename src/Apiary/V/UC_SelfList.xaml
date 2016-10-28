@@ -14,8 +14,11 @@
 			 mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="400">
 	<UserControl.Resources>
-		<DataTemplate DataType="{x:Type RoutedUICommand}">
+		<!--<DataTemplate DataType="{x:Type RoutedUICommand}">
 			<Button Style="{StaticResource cmd_h}" Command="{Binding .}" Content="{Binding ., Converter={StaticResource Cmd2Image}}"/>
+		</DataTemplate>-->
+		<DataTemplate DataType="{x:Type vm:CommandModel}">
+			<Button Style="{StaticResource cmd_h}" Command="{Binding Command}" CommandParameter="{Binding CommandParameter}" Content="{Binding Command, Converter={StaticResource Cmd2Image}}"/>
 		</DataTemplate>
 
 		<DataTemplate DataType="{x:Type data:IM_FamilyInfo}">

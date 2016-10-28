@@ -9,7 +9,7 @@ using IT;
 
 namespace Apiary.VM
 {
-	public interface IPropertyRecord
+	public interface IPropertyRecord 
 	{
 		string Key { get; }
 	}
@@ -19,7 +19,7 @@ namespace Apiary.VM
 	//}
 
 
-	public class PropertyRecord : IPropertyRecord
+	public class PropertyRecord : NotifyPropertyChangedOnly, IPropertyRecord
 	{
 		#region static
 
@@ -89,6 +89,8 @@ namespace Apiary.VM
 					this.data = value;
 				else
 					this.pi.SetValue(data, value);
+
+				this.OnPropertyChanged(nameof(this.Value));
 			}
 		}
 

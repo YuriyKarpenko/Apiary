@@ -24,7 +24,7 @@ namespace Apiary.VM
 		}
 	}
 
-	class VM_BaseEdit<T> : VM_BaseContent 
+	class VM_BaseEdit<T> : VM_BaseContent
 	{
 		public CM_Property_Value Properties { get; protected set; }
 
@@ -79,35 +79,9 @@ namespace Apiary.VM
 		}
 
 
-		protected virtual void OnMasterSelect(TMaster value)
-		{
-			//this.onSelectMaster?.Invoke(value);
-			
-			////Обман привязки для обновления полей
-			//var val = this.Value;
-			//this.Value = default(TDetail);
-			//this.OnPropertyChanged(nameof(this.Value));
-			//this.Value = val;
+		protected virtual void OnMasterSelect(TMaster value) { }
 
-			//this.OnPropertyChanged(nameof(this.Value));
-			//this.OnPropertyChanged(nameof(this.));
-		}
-
-		protected virtual void Init_Internal()
-		{
-			//var p = new Grid();
-			//p.ColumnDefinitions.Add(new ColumnDefinition());
-			//p.ColumnDefinitions.Add(new ColumnDefinition());
-
-			//var app = Application.Current;
-			//var b = new Button() { Style = (Style)app.FindResource("cmd_h"), Command = Commands.Edit, Content = app.FindResource("img_Edit") };
-			//p.Children.Add(b);
-			//b = new Button() { Style = (Style)app.FindResource("cmd_h"), Command = ApplicationCommands.Save, Content = app.FindResource("img_Save") };
-			//p.Children.Add(b);
-			//Grid.SetColumn(b, 1);
-
-			this.Footer_Set(new[] { Commands.Edit, ApplicationCommands.Save });
-		}
+		protected virtual void Init_Internal() { }
 
 		protected void Footer_Set(object value)
 		{
@@ -135,24 +109,12 @@ namespace Apiary.VM
 		{
 			base.Init_Command_Internal(uc);
 
-			//uc.CommandBindings.Add(Commands.Edit, this.Act_Edit);
-			uc.CommandBindings.Add(ApplicationCommands.Save, this.Act_Save);
+			uc.CommandBindings.Add(ApplicationCommands.Save, this.Act_Save, this.Can_Save_Internal);
 		}
 
 		protected virtual void Act_Save_Internal(ExecutedRoutedEventArgs e) { }
+		protected virtual void Can_Save_Internal(CanExecuteRoutedEventArgs e) { }
 
-		//private void Act_Edit(ExecutedRoutedEventArgs e)
-		//{
-		//	this.Debug("()");
-		//	try
-		//	{
-
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		this.Error(ex, "()");
-		//	}
-		//}
 
 		private void Act_Save(ExecutedRoutedEventArgs e)
 		{

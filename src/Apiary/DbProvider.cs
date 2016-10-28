@@ -24,7 +24,7 @@ namespace Apiary
 
 		#region dictionary
 
-		public IEnumerable<IM_Beehive> List_Beehive()
+		public IEnumerable<M_Beehive> List_Beehive()
 		{
 			this.Debug("()");
 			try

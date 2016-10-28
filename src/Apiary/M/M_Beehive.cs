@@ -11,13 +11,25 @@ namespace Apiary.M
 	class M_Beehive : M_Base, IM_Beehive
 	{
 		[MaxLength(50), StringLength(50), Required, Display(ShortName = "Название", Name = "Название", Order = 10)]
-		public string Name { get; set; }
+		public string Name
+		{
+			get { return this.Get<string>("Name"); }
+			set { this.Set("Name", value); }
+		}
 
 		[MaxLength(50), StringLength(50), Display(Name = "Адрес", Order = 20)]
-		public string Address { get; set; }
+		public string Address
+		{
+			get { return this.Get<string>("Address"); }
+			set { this.Set("Address", value); }
+		}
 
 		[MaxLength(255), StringLength(255), Display(Name = "Коментарий", Order = 30)]
-		public string Comment { get; set; }
+		public string Comment
+		{
+			get { return this.Get<string>("Comment"); }
+			set { this.Set("Comment", value); }
+		}
 
 
 		public override string ToString()
@@ -32,6 +44,7 @@ namespace Apiary.M
 		{
 			var res = new M_Beehive();
 			UtilsReflection.ClonePropertyTo(value, res);
+			res.HasModified = false;
 			return res;
 		}
 

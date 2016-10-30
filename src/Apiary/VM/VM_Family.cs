@@ -14,8 +14,9 @@ namespace Apiary.VM
 	{
 
 		public VM_Family()
-			: base(Db.List_Family(), "Выбор семьи :")
+			: base(() => Db.List_Family(VM.VM_Global.WithHidden.Value), "Выбор семьи :")
 		{
+			VM_Global.WithHiddenChanged += (s, e) => this.Master_List.Reset(Db.List_Family(e.Value));
 		}
 
 

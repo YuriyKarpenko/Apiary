@@ -24,12 +24,12 @@ namespace Apiary
 
 		#region dictionary
 
-		public IEnumerable<M_Beehive> List_Beehive()
+		public IEnumerable<M_Beehive> List_Beehive(bool withHidden)
 		{
 			this.Debug("()");
 			try
 			{
-				return M_Family.Beehives = this.db.S_Dictionary.R_Beehive.List(false)
+				return M_Family.Beehives = this.db.S_Dictionary.R_Beehive.List(withHidden)
 					.ToModel()
 					.ToArray()
 					;
@@ -57,12 +57,12 @@ namespace Apiary
 		}
 
 
-		public IEnumerable<IM_Operation> List_Operation()
+		public IEnumerable<IM_Operation> List_Operation(bool withHidden)
 		{
 			this.Debug("()");
 			try
 			{
-				return this.db.S_Dictionary.R_FamilyOperation.List();
+				return this.db.S_Dictionary.R_FamilyOperation.List(withHidden);
 			}
 			catch (Exception ex)
 			{
@@ -86,12 +86,12 @@ namespace Apiary
 		}
 
 
-		public IEnumerable<IM_FamilyProperty> List_FamilyProperty()
+		public IEnumerable<IM_FamilyProperty> List_FamilyProperty(bool withHidden)
 		{
 			this.Debug("()");
 			try
 			{
-				return this.db.S_Dictionary.R_FamilyProperty.List();
+				return this.db.S_Dictionary.R_FamilyProperty.List(withHidden);
 			}
 			catch (Exception ex)
 			{
@@ -147,7 +147,7 @@ namespace Apiary
 		}
 
 
-		public IEnumerable<M.M_Family> List_Family(bool withHidden = false)
+		public IEnumerable<M.M_Family> List_Family(bool withHidden)
 		{
 			this.Debug("()");
 			try
@@ -162,7 +162,7 @@ namespace Apiary
 			}
 		}
 
-		public IEnumerable<M.M_Family> List_Family_ByBeehive(IM_Beehive beehive)
+		public IEnumerable<M.M_Family> List_Family(IM_Beehive beehive)
 		{
 			this.Debug("()");
 			try
@@ -180,7 +180,7 @@ namespace Apiary
 			return null;
 		}
 
-		public IEnumerable<IM_FamilyInfo> List_FamilyInfo_ByBeehive(IM_Beehive beehive)
+		public IEnumerable<IM_FamilyInfo> List_FamilyInfo(IM_Beehive beehive)
 		{
 			this.Debug("()");
 			try

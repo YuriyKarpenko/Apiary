@@ -15,7 +15,7 @@ namespace Apiary.VM
 	{
 		private readonly MemCache<object, VM_Base> vms = new MemCache<object, VM_Base>();
 		//public Menu MainMenu { get; private set; }
-		public object[] MainMenu { get; private set; }
+		public MenuItem[] MainMenu { get; private set; }
 
 		public VM_Main()
 		{
@@ -25,7 +25,7 @@ namespace Apiary.VM
 
 		void Init_Menu()
 		{
-			this.MainMenu = new object[]/*MenuItem[]*/{
+			this.MainMenu = new MenuItem[]{
 				new MenuItem(){Header = "Справочники",
 					Items = {
 						new MenuItem(){ Command = Commands.Dic_FamilyProperty, CommandParameter = Tables.FamilyProperty },
@@ -37,7 +37,10 @@ namespace Apiary.VM
 				new MenuItem(){ Command = Commands.Family },
 				new MenuItem(){ Command = ApplicationCommands.Replace },
 				new MenuItem(){ Command = ApplicationCommands.Open },
+
+				new MenuItem() { Command = Commands.ShowAll, IsCheckable = true, HorizontalAlignment = HorizontalAlignment.Right }
 			};
+			this.MainMenu[5].SetBinding(MenuItem.IsCheckedProperty, "VM_Global.WithHiden.Value");
 		}
 
 		#region actions
@@ -55,6 +58,7 @@ namespace Apiary.VM
 			w.CommandBindings.Add(ApplicationCommands.Replace, this.Act_New);
 			w.CommandBindings.Add(ApplicationCommands.Open, this.Act_Open);
 
+			w.CommandBindings.Add(Commands.ShowAll, e => VM_Global.WithHidden.Value = !VM_Global.WithHidden.Value);
 		}
 
 		private void Act_New(ExecutedRoutedEventArgs e)
@@ -76,15 +80,15 @@ namespace Apiary.VM
 				switch ((Tables)e.Parameter)
 				{
 					case Tables.Beehive:
-						this.ShowDictionary(this.db.List_Beehive(), this.db.Set_Beehive);
+						this.ShowDictionary(this.db.List_Beehive(true), this.db.Set_Beehive);
 						break;
 
 					case Tables.Operation:
-						this.ShowDictionary(this.db.List_Operation(), this.db.Set_Operation);
+						this.ShowDictionary(this.db.List_Operation(true), this.db.Set_Operation);
 						break;
 
 					case Tables.FamilyProperty:
-						this.ShowDictionary(this.db.List_FamilyProperty(), this.db.Set_FamilyProperty);
+						this.ShowDictionary(this.db.List_FamilyProperty(true), this.db.Set_FamilyProperty);
 						break;
 				}
 			}

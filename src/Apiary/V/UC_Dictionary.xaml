@@ -13,7 +13,6 @@
 	<Grid>
 		<Grid.Resources>
 			<DataTemplate DataType="{x:Type vm:VM_Dictionary`1}">
-				<!--<DataTemplate DataType="{x:Type it_wpf:IEnumerableProperty`1}">-->
 				<DataGrid ItemsSource="{Binding List.List}" SelectedItem="{Binding SelectedItem}"/>
 			</DataTemplate>
 
@@ -26,13 +25,14 @@
 			<Button Style="{StaticResource cmd_h}" Command="v:Commands.Edit" Content="{StaticResource img_Edit}"/>
 			<Button Style="{StaticResource cmd_h}" Command="Save" Content="{StaticResource img_Save}"/>
 		</ToolBar>-->
-		<DataGrid>
-		</DataGrid>
-		<!--<ContentControl Grid.Row="1" Content="{Binding Content}"/>-->
+
+		<!--<ContentControl Content="{Binding Content}"/>-->
+		
 		<DataGrid AutoGenerateColumns="False" RowHeaderWidth="10"
 				  CanUserAddRows="True" CanUserDeleteRows="True"
 				  ItemsSource="{Binding Content.List}" SelectedItem="{Binding Content.SelectedItem}" 
 				  it_wpf:DataGridBehaviour.Columns="{Binding Columns}"
-				  />
+				  >
+		</DataGrid>
 	</Grid>
 </UserControl>

@@ -19,12 +19,13 @@ namespace Apiary.VM
 
 
 		public VM_Beehive(long? id)
-			: base(DbProvider.Instance.List_Beehive(), "Выбор улья :")
+			: base(() => Db.List_Beehive(VM.VM_Global.WithHidden.Value), "Выбор улья :")
 		{
+			VM_Global.WithHiddenChanged += (s, e) => this.Master_List.Reset(Db.List_Beehive(e.Value));
+
 			if (id.HasValue)
 				this.Master_List?.Select(i => i.Id == id.Value, true);
 		}
-
 
 		protected override void OnMasterSelect(M_Beehive value)
 		{
@@ -46,7 +47,7 @@ namespace Apiary.VM
 
 		private IEnumerable<M_Family> Family_Get()
 		{
-			var res = this.db.List_Family_ByBeehive(this.Master_List.SelectedItem)?.ToArray();
+			var res = this.db.List_Family(this.Master_List.SelectedItem)?.ToArray();
 			return res;
 		}
 

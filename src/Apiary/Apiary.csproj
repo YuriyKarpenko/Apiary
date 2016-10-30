@@ -94,7 +94,6 @@
     <Compile Include="VM\Base\VM_BaseDb.cs" />
     <Compile Include="VM\PropertyRecord.cs" />
     <Compile Include="VM\VM_Beehive.cs" />
-    <Compile Include="VM\VM_CRUD.cs" />
     <Compile Include="VM\VM_Dialog.cs" />
     <Compile Include="VM\VM_Dictionary.cs" />
     <Compile Include="VM\VM_Family.cs" />

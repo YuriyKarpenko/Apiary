@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Input;
 
 using IT;
 using IT.WPF;
@@ -11,22 +11,27 @@ namespace Apiary.VM
 {
     class VM_Global
     {
-        #region WithHiden
+        #region WithHidden
 
-        public static event EventHandler<EventArgs<bool>> WithHidenChanged;
+        public static event EventHandler<EventArgs<bool>> WithHiddenChanged;
 
-        public static MonitoredProperty<bool> WithHiden { get; private set; }
+        public static MonitoredProperty<bool> WithHidden { get; private set; }
 
-        private static void onWithHidenChanged(bool value)
+		//public static void WithHiden_Set(ExecutedRoutedEventArgs e)
+		//{
+		//	//WithHiden.Value = !withHiden;
+		//	onWithHidenChanged(withHiden = !withHiden);
+		//}
+		private static void onWithHiddenChanged(bool value)
         {
-            WithHidenChanged?.Invoke(WithHiden, new EventArgs<bool>(value));
+            WithHiddenChanged?.Invoke(WithHidden, new EventArgs<bool>(value));
         }
 
         #endregion
 
         static VM_Global()
         {
-            WithHiden = new MonitoredProperty<bool>(onWithHidenChanged);
+            WithHidden = new MonitoredProperty<bool>(onWithHiddenChanged);
         }
     }
 }

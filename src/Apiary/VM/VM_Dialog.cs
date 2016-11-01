@@ -22,7 +22,7 @@ namespace Apiary.VM
 			}
 			catch (Exception ex)
 			{
-				Logger.ToLogFmt(null, System.Diagnostics.TraceLevel.Error, ex, "{0}.()", typeof(VM_Dialog));
+				Logger.ToLogFmt(null, System.Diagnostics.TraceLevel.Warning, ex, "{0}.()", typeof(VM_Dialog));
 				throw;
 			}
 		}

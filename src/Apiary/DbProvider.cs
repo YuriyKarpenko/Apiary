@@ -19,6 +19,7 @@ namespace Apiary
 		private DbProvider()
 		{
 			this.db = new DB();
+			M_Family.Beehives = M_Family.Beehives ?? this.db.S_Dictionary.R_Beehive.List(false).ToModel();
 		}
 
 
@@ -210,6 +211,11 @@ namespace Apiary
 			}
 		}
 
+		public void Set_Family(IEnumerable<IM_Family> values)
+		{
+			foreach (var v in values)
+				Set_Family(v);
+		}
 		#endregion
 
 	}

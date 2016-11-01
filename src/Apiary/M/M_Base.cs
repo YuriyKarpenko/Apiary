@@ -13,7 +13,7 @@ namespace Apiary.M
 #if GUID
 #else
 #endif
-		private MemCache<Type, object> cacheType = new MemCache<Type, object>();
+		private MemCache<string, object> cacheType = new MemCache<string, object>();
 
 		[Display(AutoGenerateField = false, Order = -100)]
 #if GUID
@@ -64,6 +64,8 @@ namespace Apiary.M
 
 		protected T Get<T>(string propName)
 		{
+			//this.Info($"({this.GetType()}.{propName})");
+			IT.Log.Logger.ToLogFmt(null, TraceLevel.Info, null, $"({this.GetType()}.{propName})");
 			try
 			{
 				var res = this.GetCache<T>()[propName];
@@ -94,7 +96,7 @@ namespace Apiary.M
 
 		private MemCache<string, T> GetCache<T>()
 		{
-			var cache = (MemCache<string, T>)this.cacheType[typeof(T), () => new MemCache<string, T>()];
+			var cache = (MemCache<string, T>)this.cacheType[typeof(T).FullName, () => new MemCache<string, T>()];
 			return cache;
 		}
 	}

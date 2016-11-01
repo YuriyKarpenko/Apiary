@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
+using System.Windows.Threading;
 
 using IT;
 using IT.Log;
@@ -27,6 +28,12 @@ namespace Apiary
 			Logger.MinLevel = TraceLevel.Warning;
 #endif
 			Logger.MessageSmall += Logger_MessageSmall;
+			this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+		}
+
+		private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+		{
+			Logger.ToLogFmt(this, TraceLevel.Error, e.Exception, "()");
 		}
 
 		void Logger_MessageSmall(object sender, EventArgs<TraceLevel, string, Exception> e)

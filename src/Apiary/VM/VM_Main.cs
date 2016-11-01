@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 using Apiary.Data;
@@ -14,8 +16,10 @@ namespace Apiary.VM
 	class VM_Main : VM_BaseContent
 	{
 		private readonly MemCache<object, VM_Base> vms = new MemCache<object, VM_Base>();
-		//public Menu MainMenu { get; private set; }
+
+		public bool WithHidden { get { return VM_Global.WithHidden.Value; } set { VM_Global.WithHidden.Value = value; } }
 		public MenuItem[] MainMenu { get; private set; }
+
 
 		public VM_Main()
 		{
@@ -35,13 +39,18 @@ namespace Apiary.VM
 				},
 				new MenuItem(){ Command = Commands.Beehive },
 				new MenuItem(){ Command = Commands.Family },
+#if DEBUG
 				new MenuItem(){ Command = ApplicationCommands.Replace },
 				new MenuItem(){ Command = ApplicationCommands.Open },
+#endif
 
-				new MenuItem() { Command = Commands.ShowAll, IsCheckable = true, HorizontalAlignment = HorizontalAlignment.Right }
+				new MenuItem() { Command = Commands.ShowAll, IsCheckable = true, /*HorizontalAlignment = HorizontalAlignment.Right*/ }
 			};
-			this.MainMenu[5].SetBinding(MenuItem.IsCheckedProperty, "VM_Global.WithHiden.Value");
+			//this.MainMenu[5].SetBinding(MenuItem.IsCheckedProperty, "global::Apiary.VM.VM_Global.WithHiden.Value");
+			//BindingOperations.SetBinding(this.MainMenu[5], MenuItem.IsCheckedProperty, new Binding("global::Apiary.VM.VM_Global.WithHidden.Value"));
+			BindingOperations.SetBinding(this.MainMenu[5], MenuItem.IsCheckedProperty, new Binding("WithHidden"));
 		}
+
 
 		#region actions
 
@@ -58,7 +67,7 @@ namespace Apiary.VM
 			w.CommandBindings.Add(ApplicationCommands.Replace, this.Act_New);
 			w.CommandBindings.Add(ApplicationCommands.Open, this.Act_Open);
 
-			w.CommandBindings.Add(Commands.ShowAll, e => VM_Global.WithHidden.Value = !VM_Global.WithHidden.Value);
+			w.CommandBindings.Add(Commands.ShowAll, e => global::Apiary.VM.VM_Global.WithHidden.Value = !VM_Global.WithHidden.Value);
 		}
 
 		private void Act_New(ExecutedRoutedEventArgs e)
@@ -68,8 +77,9 @@ namespace Apiary.VM
 
 		private void Act_Open(ExecutedRoutedEventArgs e)
 		{
-			var item = new M_Family() { BeehiveId = 1, Comment = "Comment1", Name = "Fam 1" };
-			db.Set_Family(item);
+			this.ShowDictionary(this.db.List_Family(true).ToArray(), this.db.Set_Family);
+			//var item = new M_Family() { BeehiveId = 1, Comment = "Comment1", Name = "Fam 1" };
+			//db.Set_Family(item);
 		}
 
 		private void Act_Dictionary(ExecutedRoutedEventArgs e)
@@ -94,7 +104,7 @@ namespace Apiary.VM
 			}
 			catch (Exception ex)
 			{
-				this.Error(ex, "({0})", e.Parameter);
+				this.Warn(ex, "({0})", e.Parameter);
 			}
 		}
 		private void ShowDictionary<T>(IEnumerable<T> list, Action<IEnumerable<T>> saveList) where T : class, IEntityBase
@@ -110,7 +120,6 @@ namespace Apiary.VM
 			catch (Exception ex)
 			{
 				this.Error(ex, "()");
-				throw;
 			}
 		}
 

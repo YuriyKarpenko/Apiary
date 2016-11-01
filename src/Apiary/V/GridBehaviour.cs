@@ -422,8 +422,8 @@ namespace Apiary.V
 					SelectedValuePath = lookUp.ValueMember,
 					//IsTextSearchEnabled = false,
 				};
-				res.SetBinding(ComboBox.ItemsSourceProperty, new Binding(lookUp.DataSource));
-				res.SetBinding(ComboBox.SelectedValueProperty, new Binding(lookUp.LookupMember));
+				BindingOperations.SetBinding(res, ItemsControl.ItemsSourceProperty, new Binding(lookUp.DataSource));
+				BindingOperations.SetBinding(res, Selector.SelectedValueProperty, new Binding(lookUp.LookupMember));
 				return res;
 			}
 

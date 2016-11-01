@@ -126,7 +126,6 @@ namespace Apiary.VM
 			catch (Exception ex)
 			{
 				this.Error(ex, "()");
-				throw;
 			}
 		}
 	}

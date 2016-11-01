@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 using Apiary.Data;
@@ -34,7 +35,7 @@ namespace Apiary.VM
 				if (pd.GetAttributeValue<BrowsableAttribute, bool>(a => a.Browsable, true))
 				{
 					DataGridColumn col = null;
-					var binding = new System.Windows.Data.Binding(pd.Name);
+					var binding = new Binding(pd.Name);
 
 					var enumType = pd.GetAttributeValue<EnumDataTypeAttribute, Type>(a => a.EnumType, null);
 					if (enumType != null)
@@ -65,7 +66,7 @@ namespace Apiary.VM
 							SelectedValuePath = lookUp.ValueMember,
 						};
 						//(col as DataGridComboBoxColumn).Binding(ComboBox.ItemsSourceProperty, new System.Windows.Data.Binding(lookUp.DataSource).ProvideValue);
-						return res;
+						var ds = t.GetProperty(lookUp.DataSource)?.GetValue(null);
 					}
 
 					if (col == null && pd.PropertyType == typeof(bool))

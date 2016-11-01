@@ -55,18 +55,19 @@ namespace Apiary.VM
 					LookupBindingPropertiesAttribute lookUp = lookUps?.FirstOrDefault(i => i.LookupMember == pd.Name);
 					if (col == null && lookUp != null)
 					{
+						var ds = t.GetProperty(lookUp.DataSource)?.GetValue(null);
 						col = new DataGridComboBoxColumn()
 						{
 							DisplayMemberPath = lookUp.DisplayMember,
 							//IsEditable = isEnabled,
 							//IsEnabled = isEnabled,
-							//IsReadOnly = !isEnabled,
 							//ItemsSource = (IEnumerable)new System.Windows.Data.Binding(lookUp.DataSource).ProvideValue(),
+							ItemsSource = (IEnumerable)ds,
 							SelectedValueBinding = binding,
 							SelectedValuePath = lookUp.ValueMember,
 						};
-						//(col as DataGridComboBoxColumn).Binding(ComboBox.ItemsSourceProperty, new System.Windows.Data.Binding(lookUp.DataSource).ProvideValue);
-						var ds = t.GetProperty(lookUp.DataSource)?.GetValue(null);
+						if (ds == null)
+							BindingOperations.SetBinding(col, DataGridComboBoxColumn.ItemsSourceProperty, new Binding(lookUp.DataSource));
 					}
 
 					if (col == null && pd.PropertyType == typeof(bool))

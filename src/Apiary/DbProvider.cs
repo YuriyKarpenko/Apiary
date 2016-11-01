@@ -19,7 +19,7 @@ namespace Apiary
 		private DbProvider()
 		{
 			this.db = new DB();
-			M_Family.Beehives = M_Family.Beehives ?? this.db.S_Dictionary.R_Beehive.List(false).ToModel();
+			M_Family.Beehives = this.List_Beehive(true);
 		}
 
 
@@ -30,7 +30,7 @@ namespace Apiary
 			this.Debug("()");
 			try
 			{
-				return M_Family.Beehives = this.db.S_Dictionary.R_Beehive.List(withHidden)
+				return this.db.S_Dictionary.R_Beehive.List(withHidden)
 					.ToModel()
 					.ToArray()
 					;
@@ -48,7 +48,7 @@ namespace Apiary
 			try
 			{
 				var i = this.db.S_Dictionary.R_Beehive.Set(value);
-				M_Family.Beehives = value.ToModel();
+				M_Family.Beehives = this.List_Beehive(true);
 			}
 			catch (Exception ex)
 			{
@@ -216,7 +216,21 @@ namespace Apiary
 			foreach (var v in values)
 				Set_Family(v);
 		}
+
 		#endregion
 
+		public IEnumerable<IM_OperationProperty> List_OperationProperty(bool withHidden)
+		{
+			this.Debug("()");
+			try
+			{
+				//return this.db.S_Dictionary.
+			}
+			catch (Exception ex)
+			{
+				this.Error(ex, "()");
+			}
+			return null;
+		}
 	}
 }

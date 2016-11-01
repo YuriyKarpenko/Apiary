@@ -22,8 +22,6 @@ namespace Apiary.M
 		public long Id { get; set; }
 #endif
 
-		//[DataType( System.ComponentModel.DataAnnotations.DataType.)]
-
 		[Browsable(false)]
 		public DateTime Created { get; set; }
 
@@ -31,7 +29,7 @@ namespace Apiary.M
 		public DateTime Modified { get; set; }
 
 		[Browsable(true)]
-		[Display(AutoGenerateField = true, Name = "Сктыть", Order = 100)]
+		[Display(AutoGenerateField = true, Name = "Скрыть", Order = 100)]
 		public bool Hide
 		{
 			get { return this.Get<bool>("Hide"); }
@@ -64,8 +62,7 @@ namespace Apiary.M
 
 		protected T Get<T>(string propName)
 		{
-			//this.Info($"({this.GetType()}.{propName})");
-			IT.Log.Logger.ToLogFmt(null, TraceLevel.Info, null, $"({this.GetType()}.{propName})");
+			//IT.Log.Logger.ToLogFmt(null, TraceLevel.Info, null, $"({this.GetType()}.{propName})");
 			try
 			{
 				var res = this.GetCache<T>()[propName];

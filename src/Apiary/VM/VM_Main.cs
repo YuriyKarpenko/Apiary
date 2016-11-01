@@ -46,7 +46,6 @@ namespace Apiary.VM
 
 				new MenuItem() { Command = Commands.ShowAll, IsCheckable = true, /*HorizontalAlignment = HorizontalAlignment.Right*/ }
 			};
-			//this.MainMenu[5].SetBinding(MenuItem.IsCheckedProperty, "global::Apiary.VM.VM_Global.WithHiden.Value");
 			//BindingOperations.SetBinding(this.MainMenu[5], MenuItem.IsCheckedProperty, new Binding("global::Apiary.VM.VM_Global.WithHidden.Value"));
 			BindingOperations.SetBinding(this.MainMenu[5], MenuItem.IsCheckedProperty, new Binding("WithHidden"));
 		}
@@ -78,8 +77,7 @@ namespace Apiary.VM
 		private void Act_Open(ExecutedRoutedEventArgs e)
 		{
 			this.ShowDictionary(this.db.List_Family(true).ToArray(), this.db.Set_Family);
-			//var item = new M_Family() { BeehiveId = 1, Comment = "Comment1", Name = "Fam 1" };
-			//db.Set_Family(item);
+			//db.Set_Family(new M_Family() { BeehiveId = 1, Comment = "Comment1", Name = "Fam 1" });
 		}
 
 		private void Act_Dictionary(ExecutedRoutedEventArgs e)

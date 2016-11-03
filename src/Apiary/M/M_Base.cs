@@ -4,12 +4,21 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 
 using IT;
+using Apiary.Data;
 
 namespace Apiary.M
 {
 	[DebuggerDisplay("{Id} c:{Created} m:{Modified} h:{Hide}")]
-	public abstract class M_Base : IT.NotifyPropertyChangedOnly, Apiary.Data.IEntityBase, ILog
+	public abstract class M_Base : IT.NotifyPropertyChangedOnly, IEntityBase, ILog
 	{
+		public static T BaseToModel<T>(object value) where T : M_Base, new() 
+		{
+			var res = UtilsReflection.ClonePropertyTo(value, new T());
+			res.HasModified = false;
+			return res;
+		}
+
+
 #if GUID
 #else
 #endif
@@ -96,5 +105,19 @@ namespace Apiary.M
 			var cache = (MemCache<string, T>)this.cacheType[typeof(T).FullName, () => new MemCache<string, T>()];
 			return cache;
 		}
+	}
+
+
+	[DebuggerDisplay("{Id}:{Name} h:{Hide}")]
+	class M_BaseDic : M_Base, Apiary.Data.IEntityDic
+	{
+		[Display(AutoGenerateField = true, Name = "Название", ShortName = "Название", Order = 10)]
+		[MaxLength(50), StringLength(50), Required]
+		public string Name
+		{
+			get { return this.Get<string>("Name"); }
+			set { this.Set("Name", value); }
+		}
+
 	}
 }

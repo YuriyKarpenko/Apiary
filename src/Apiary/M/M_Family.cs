@@ -8,7 +8,7 @@ using Apiary.Data;
 namespace Apiary.M
 {
 	[LookupBindingProperties("Beehives", "Name", "Id", "BeehiveId")]
-	class M_Family : M_Base, IM_Family
+	class M_Family : M_BaseDic, IM_Family
 	{
 		[Browsable(false)]
 		public static IEnumerable<M_Beehive> Beehives { get; set; }
@@ -19,13 +19,6 @@ namespace Apiary.M
 		{
 			get { return this.Get<long>("BeehiveId"); }
 			set { this.Set("BeehiveId", value); }
-		}
-
-		[Display(Name = "Название", AutoGenerateField = true, Order = 10)]
-		public string Name
-		{
-			get { return this.Get<string>("Name"); }
-			set { this.Set("Name", value); }
 		}
 
 		[Display(Name = "Дата рождения", AutoGenerateField = true, Order = 20)]
@@ -69,10 +62,7 @@ namespace Apiary.M
 	{
 		public static M_Family ToModel(this IM_Family value)
 		{
-			var res = new M_Family();
-			IT.UtilsReflection.ClonePropertyTo(value, res);
-			res.HasModified = false;
-			return res;
+			return M_Base.BaseToModel<M_Family>(value);
 		}
 
 		public static IEnumerable<M_Family> ToModel(this IEnumerable<IM_Family> value)

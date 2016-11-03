@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
 
 using IT;
 using IT.Data;
@@ -12,9 +9,9 @@ using Apiary.Data.Model;
 
 namespace Apiary.Data.Repositoty
 {
-	public interface IR_FamilyInfoProperty : IRepositoryBase<IM_FamilyInfoProperty>
+	interface IR_FamilyInfoProperty : IRepositoryBase<IM_FamilyInfoProperty>
 	{
-		IEnumerable<IM_FamilyInfoProperty> GetByFamily(IM_Family family);
+		IEnumerable<IM_FamilyInfoProperty> Get_ByFamily(IM_Family family);
 	}
 
 	class R_FamilyInfoProperty : RepositoryBase<M_FamilyInfoProperty, IM_FamilyInfoProperty>, IR_FamilyInfoProperty
@@ -37,7 +34,7 @@ namespace Apiary.Data.Repositoty
 		public R_FamilyInfoProperty(IDbContext context) : base(context, Tables.FamilyInfoProperty) { }
 
 
-		public IEnumerable<IM_FamilyInfoProperty> GetByFamily(IM_Family family)
+		public IEnumerable<IM_FamilyInfoProperty> Get_ByFamily(IM_Family family)
 		{
 			Contract.NotNull(family, "family");
 			this.Debug("()");

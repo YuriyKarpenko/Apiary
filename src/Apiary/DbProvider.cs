@@ -58,12 +58,14 @@ namespace Apiary
 		}
 
 
-		public IEnumerable<IM_Operation> List_Operation(bool withHidden)
+		public IEnumerable<M_Operation> List_Operation(bool withHidden)
 		{
 			this.Debug("()");
 			try
 			{
-				return this.db.S_Dictionary.R_FamilyOperation.List(withHidden);
+				return this.db.S_Dictionary.R_FamilyOperation.List(withHidden)
+					.ToModel()
+					.ToArray();
 			}
 			catch (Exception ex)
 			{

@@ -3,9 +3,9 @@
 namespace Apiary.Data
 {
 	/// <summary>
-	/// Привязка значений последних параметров к семье (избыточность)
+	/// Привязка значений последних параметров к семье (избыточность, только для внутреннего использования)
 	/// </summary>
-	public interface IM_FamilyInfoProperty : IEntityBase
+	interface IM_FamilyInfoProperty : IEntityBase
 	{
 #if GUID
 		Guid FamilyId { get; set; }
@@ -37,9 +37,9 @@ namespace Apiary.Data.Model
 		[Association("FK_FamilyInfoProperty2FamilyProperty", "", "FamilyProperty.Id")]
 		public Guid FamilyPropertyId { get; set; }
 #else
-		[Association("FK_FamilyInfoProperty2Family", "FamilyId", "Family.Id")]
+		[Association("FK_FamilyInfoProperty2Family", "FamilyId", "Family.Id", IsForeignKey = true)]
 		public long FamilyId { get; set; }
-		[Association("FK_FamilyInfoProperty2FamilyProperty", "", "FamilyProperty.Id")]
+		[Association("FK_FamilyInfoProperty2FamilyProperty", "FamilyPropertyId", "FamilyProperty.Id", IsForeignKey = true)]
 		public long FamilyPropertyId { get; set; }
 #endif
 

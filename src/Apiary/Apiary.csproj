@@ -87,6 +87,7 @@
     <Compile Include="M\M_Base.cs" />
     <Compile Include="M\M_Beehive.cs" />
     <Compile Include="M\M_Family.cs" />
+    <Compile Include="M\M_Operation.cs" />
     <Compile Include="M\M_Property.cs" />
     <Compile Include="VM\CM_Property.cs" />
     <Compile Include="VM\Base\ICRUD.cs" />

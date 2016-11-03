@@ -12,7 +12,7 @@ namespace Apiary.Data.Servise
 
 	public interface IS_Family : ILog
 	{
-		IR_FamilyInfoProperty R_FamilyProperties { get; }
+		//IR_FamilyInfoProperty R_FamilyProperties { get; }
 		IR_Family R_Family { get; }
 
 		IM_FamilyInfo Get_FamilyInfo(IM_Family family);
@@ -44,9 +44,9 @@ namespace Apiary.Data.Servise
 			try
 			{
 				var propAll = this._R_FamilyProperty.List();
-				var prop = this.R_FamilyProperties.GetByFamily(family);
+				var prop = this.R_FamilyProperties.Get_ByFamily(family);
 				var propRes = propAll
-					.Select(x => (IM_PropertyInfo)new M_PropertyInfo(family, x, prop.FirstOrDefault(i => i.FamilyPropertyId == i.Id)))
+					.Select(x => (IM_FamilyPropertyValue)new M_FamilyPropertyValue(x, prop.FirstOrDefault(i => i.FamilyPropertyId == i.Id)))
 					.ToList();
 				return new M_FamilyInfo(family, propRes);
 

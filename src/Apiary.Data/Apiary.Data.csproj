@@ -68,7 +68,7 @@
     <Compile Include="Model\M_Beehive.cs" />
     <Compile Include="Model\Based\EntityDic.cs" />
     <Compile Include="Model\M_FamilyInfoProperty.cs" />
-    <Compile Include="Servise\M_PropertyInfo.cs" />
+    <Compile Include="Servise\M_FamilyPropertyValue.cs" />
     <Compile Include="Servise\S_Dictionary.cs" />
     <Compile Include="Servise\S_Family.cs" />
     <Compile Include="TypeOfParam.cs" />

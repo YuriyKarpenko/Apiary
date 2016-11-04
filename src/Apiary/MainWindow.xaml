@@ -23,9 +23,9 @@
 			<v:UC_SelfList/>
 		</DataTemplate>
 
-		<!--<DataTemplate DataType="{x:Type RoutedUICommand}">
-			<MenuItem Header="Text"/>
-		</DataTemplate>-->
+		<DataTemplate DataType="{x:Type vm:VM_FamilyOperations}">
+			<v:UC_FamilyOperations/>
+		</DataTemplate>
 
 	</Window.Resources>
 

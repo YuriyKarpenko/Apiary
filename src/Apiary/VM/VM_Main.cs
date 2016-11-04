@@ -39,15 +39,17 @@ namespace Apiary.VM
 				},
 				new MenuItem(){ Command = Commands.Beehive },
 				new MenuItem(){ Command = Commands.Family },
+				new MenuItem(){ Command = Commands.FamilyOperations },
+
+				new MenuItem() { Command = Commands.ShowAll, IsCheckable = true, /*HorizontalAlignment = HorizontalAlignment.Right*/ },
 #if DEBUG
 				new MenuItem(){ Command = ApplicationCommands.Replace },
 				new MenuItem(){ Command = ApplicationCommands.Open },
 #endif
 
-				new MenuItem() { Command = Commands.ShowAll, IsCheckable = true, /*HorizontalAlignment = HorizontalAlignment.Right*/ }
 			};
 			//BindingOperations.SetBinding(this.MainMenu[5], MenuItem.IsCheckedProperty, new Binding("global::Apiary.VM.VM_Global.WithHidden.Value"));
-			BindingOperations.SetBinding(this.MainMenu[5], MenuItem.IsCheckedProperty, new Binding("WithHidden"));
+			BindingOperations.SetBinding(this.MainMenu[4], MenuItem.IsCheckedProperty, new Binding("WithHidden"));
 		}
 
 
@@ -63,6 +65,7 @@ namespace Apiary.VM
 
 			w.CommandBindings.Add(Commands.Beehive, this.Act_Beehive);
 			w.CommandBindings.Add(Commands.Family, this.Act_Family);
+			w.CommandBindings.Add(Commands.FamilyOperations, this.Act_FamilyOperations);
 			w.CommandBindings.Add(ApplicationCommands.Replace, this.Act_New);
 			w.CommandBindings.Add(ApplicationCommands.Open, this.Act_Open);
 
@@ -129,6 +132,20 @@ namespace Apiary.VM
 		private void Act_Family(ExecutedRoutedEventArgs e)
 		{
 			this.Content_Set(new VM_Family());
+		}
+
+		private void Act_FamilyOperations(ExecutedRoutedEventArgs e)
+		{
+			this.Debug("()");
+			try
+			{
+				var vm = new VM_FamilyOperations();
+				this.Content_Set(vm);
+			}
+			catch (Exception ex)
+			{
+				this.Error(ex, "()");
+			}
 		}
 
 		#endregion

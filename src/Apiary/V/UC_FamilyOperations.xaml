@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="Apiary.V.UC_FamilyOperations"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Apiary.V"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="300">
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="2*"/>
+		</Grid.ColumnDefinitions>
+
+		<Grid Name="Filters">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+
+			<GroupBox Grid.ColumnSpan="1" Header="Дата: "/>
+
+			<TextBlock Grid.Column="0" Grid.Row="2" Text="Семьи: " />
+			<ComboBox Grid.Column="1" Grid.Row="2" ItemsSource="{Binding Families.List}" SelectedItem="{Binding Families.SelectedItem}"/>
+
+			<TextBlock Grid.Column="0" Grid.Row="3" Text="Операции: " />
+			<ComboBox Grid.Column="1" Grid.Row="3" ItemsSource="{Binding Operations.List}" SelectedItem="{Binding Operations.SelectedItem}"/>
+
+		</Grid>
+
+		<ContentControl Grid.Column="1" Content="{Binding Content}"/>
+	</Grid>
+</UserControl>

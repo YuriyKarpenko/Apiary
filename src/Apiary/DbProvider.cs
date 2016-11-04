@@ -236,5 +236,18 @@ namespace Apiary
 			}
 			return null;
 		}
+		public int Set_FamilyOperations(IM_FamilyOperation value)
+		{
+			this.Debug("()");
+			try
+			{
+				//return this.db.S_Family.Set_Journal(value);
+			}
+			catch (Exception ex)
+			{
+				this.Error(ex, "()");
+			}
+			return 0;
+		}
 	}
 }

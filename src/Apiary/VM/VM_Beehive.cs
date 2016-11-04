@@ -15,7 +15,7 @@ namespace Apiary.VM
 {
 	class VM_Beehive : VM_BaseEditHierarchy<M_Beehive, M_Beehive>
 	{
-		public IEnumerableProperty<M_Family> Families { get; private set; }
+		public SelectorProperty<M_Family> Families { get; private set; }
 
 
 		public VM_Beehive(long? id)
@@ -39,7 +39,7 @@ namespace Apiary.VM
 		protected override void Init_Internal()
 		{
 			base.Init_Internal();
-			this.Families = new IEnumerableProperty<M_Family>(Family_Get, this.Family_Select);
+			this.Families = new SelectorProperty<M_Family>(Family_Get, this.Family_Select);
 			this.Content_Set(this.Families);
 			this.Footer_Set(new[] { new CommandModel(ApplicationCommands.Save) });
 		}

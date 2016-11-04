@@ -96,7 +96,7 @@ namespace Apiary.VM
 		private Action<T> onDelete = null;
 
 		public List<DataGridColumn> Columns { get { return GenerateColumns(typeof(T)); } /*private set; */}
-		public IEnumerableProperty<T> List { get; private set; }
+		public SelectorProperty<T> List { get; private set; }
 
 
 		public VM_Dictionary(IEnumerable<T> list, Action<T> onDelete)
@@ -105,7 +105,7 @@ namespace Apiary.VM
 
 			this.onDelete = onDelete;
 
-			this.List = new IEnumerableProperty<T>(() => list);
+			this.List = new SelectorProperty<T>(() => list);
 
 			this.Content_Set(this.List);
 		}

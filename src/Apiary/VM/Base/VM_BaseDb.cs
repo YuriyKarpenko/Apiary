@@ -52,7 +52,7 @@ namespace Apiary.VM
 		/// <summary>
 		/// Список мастер-объектов
 		/// </summary>
-		public IEnumerableProperty<TMaster> Master_List { get; protected set; }
+		public SelectorProperty<TMaster> Master_List { get; protected set; }
 
 		/// <summary>
 		/// 
@@ -63,7 +63,7 @@ namespace Apiary.VM
 
 		protected VM_BaseEditHierarchy(Func<IEnumerable<TMaster>> getMasterList, string masterCaption = "Выбор владельца : ")
 		{
-			this.Master_List = new IEnumerableProperty<TMaster>(getMasterList, this.OnMasterSelect);
+			this.Master_List = new SelectorProperty<TMaster>(getMasterList, this.OnMasterSelect);
 			this.Master_Caption = masterCaption;
 			this.Init();
 		}

@@ -221,12 +221,14 @@ namespace Apiary
 
 		#endregion
 
-		public IEnumerable<IM_OperationProperty> List_OperationProperty(bool withHidden)
+		public IEnumerable<IM_FamilyOperation> List_FamilyOperations(bool withHidden, IM_Family family, IM_Operation operation, DateTime? date)
 		{
 			this.Debug("()");
 			try
 			{
-				//return this.db.S_Dictionary.
+				return this.db.S_Family.Get_Journal(family, operation, date)
+					.Where(i => i.Hide || withHidden)
+					.ToArray();
 			}
 			catch (Exception ex)
 			{

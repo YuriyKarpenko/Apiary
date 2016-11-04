@@ -13,7 +13,7 @@ namespace Apiary.VM
 			var el = container as FrameworkElement;
 			if(el != null && item != null)
 			{
-				var gt = typeof(IT.WPF.IEnumerableProperty<>);
+				var gt = typeof(IT.WPF.SelectorProperty<>);
 				var it = item.GetType();
 				while(it != null)
 				{

@@ -17,6 +17,7 @@ namespace Apiary.VM
 		public static readonly RoutedUICommand Beehive = new RoutedUICommand("Ульи", "Beehive", typeof(Commands));
 		public static readonly RoutedUICommand Family = new RoutedUICommand("Семьи", "Family", typeof(Commands));
 		public static readonly RoutedUICommand FamilyProperty = new RoutedUICommand("Свойства семьи", "FamilyProperty", typeof(Commands));
+		public static readonly RoutedUICommand FamilyOperations = new RoutedUICommand("Операции", "FamilyOperations", typeof(Commands));
 
 		public static readonly RoutedUICommand ShowAll = new RoutedUICommand("Показывать все", "ShowAll", typeof(Commands));
 

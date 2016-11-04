@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Apiary.Data
 {
     /// <summary>
-    /// Запись для значения параметра операции с семьей
+    /// Запись для значения параметра операции с семьей (журнал)
     /// </summary>
     public interface IM_FamilyOperation : IEntityBase
     {

@@ -18,7 +18,7 @@ namespace Apiary.V
 {
 	public static class GridBehaviour
 	{
-		#region PropertyGrid_Properties
+		#region PropertyGrid_Dictionary
 
 		/// <summary>
 		/// Properties of value for show
@@ -174,7 +174,10 @@ namespace Apiary.V
 				var t = e.NewValue?.GetType();
 				SetPropertyGrid_Type(d, t);
 				foreach (var el in gr.Children.OfType<FrameworkElement>())
+				{
 					el.DataContext = e.NewValue;
+					el.IsEnabled = (e.NewValue as VM.ICM_Property)?.IsEditMode ?? false;
+				}
 			}
 		}
 

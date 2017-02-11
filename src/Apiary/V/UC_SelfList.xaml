@@ -36,7 +36,7 @@
 			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
 
-		<DockPanel Grid.Column="0">
+		<DockPanel Grid.Column="0" Grid.Column="0" Name="Left_Panel">
 
 			<StackPanel DockPanel.Dock="Top" Name="SelfTop">
 				<TextBlock DockPanel.Dock="Left" Text="{Binding Master_Caption}"/>
@@ -57,7 +57,7 @@
 
 		<GridSplitter Grid.Column="1" />
 
-		<DockPanel Grid.Column="2" >
+		<DockPanel Grid.Column="2" Name="Right_Panel">
 			<ToolBar DockPanel.Dock="Top">
 				<Button Style="{StaticResource cmd_h}" Command="Refresh" Content="{StaticResource img_Refresh}"/>
 				<Separator/>

@@ -1,0 +1,40 @@
+﻿<MainWindoW DataContext="vm:VM_Main">
+	<Grid>
+		<Menu ItemsSource="{Binding MainMenu}"/>
+
+		<ContentControl Grid.Row="2" Content="{Binding Content}"/>
+		[	null
+			|| VM_Beehive(:VM_BaseEditHierarchy): {
+				<v:UC_SelfList/>
+			},
+			|| VM_Family(:VM_BaseEditHierarchy): {
+				<v:UC_SelfList/>
+			},
+			|| VM_FamilyOperations: {
+				<v:UC_FamilyOperations/>
+			},
+		]
+
+		<StatusBar Grid.Row="3"/>
+	</Grid>
+</MainWindoW>
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+<v:UC_SelfList>
+
+	<DockPanel Name="Left_Panel">
+		...
+		<ContentControl Content="{Binding Properties}" x:Name="Left_Content"/>
+		...
+	</DockPanel>
+
+	<GridSplitter Grid.Column="1" />
+
+	<DockPanel Name="Right_Panel">
+		<ToolBar DockPanel.Dock="Top" Name="ToollbarEdit">...</ToolBar>
+			
+		<ContentControl Content="{Binding Content}" x:Name="Right_Content" ContentTemplateSelector="{StaticResource ContentTemplateSelector}"/>
+	</DockPanel>
+
+</v:UC_SelfList>

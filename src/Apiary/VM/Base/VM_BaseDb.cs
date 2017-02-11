@@ -55,9 +55,9 @@ namespace Apiary.VM
 		public SelectorProperty<TMaster> Master_List { get; protected set; }
 
 		/// <summary>
-		/// 
+		/// Buttons for left_Panel
 		/// </summary>
-		public object Footer { get; protected set; }
+		public IEnumerable<object> Footer { get; protected set; }
 
 
 
@@ -67,12 +67,8 @@ namespace Apiary.VM
 			this.Master_Caption = masterCaption;
 			this.Init();
 		}
-		//public VM_BaseEditHierarchy(IEnumerable<TMaster> masterList, Action<TMaster> onSelectMaster, string masterCaption = "Выбор владельца : ", CM_PropertyItem<TDetail> properties = null)
-		//	: this(masterList, onSelectMaster, masterCaption)
-		//{
-		//	this.Properties_Set(properties);
-		//}
-		public VM_BaseEditHierarchy(Func<IEnumerable<TMaster>> getMasterList, string masterCaption = "Выбор владельца : ", TDetail value = default(TDetail))
+
+		public  VM_BaseEditHierarchy(Func<IEnumerable<TMaster>> getMasterList, string masterCaption = "Выбор владельца : ", TDetail value = default(TDetail))
 			: this(getMasterList, masterCaption)
 		{
 			this.Properties_Set(new VM.CM_Property_Value(value));
@@ -83,9 +79,10 @@ namespace Apiary.VM
 
 		protected virtual void Init_Internal() { }
 
-		protected void Footer_Set(object value)
+		protected void Footer_Set(params object[] values)
 		{
-			this.Footer = value;
+
+			this.Footer = values;
 			this.OnPropertyChanged(nameof(this.Footer));
 		}
 

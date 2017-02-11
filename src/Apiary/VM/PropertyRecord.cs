@@ -65,6 +65,7 @@ namespace Apiary.VM
 
 		protected object data;
 
+
 		public string Key { get; private set; }
 
 
@@ -82,7 +83,7 @@ namespace Apiary.VM
 
 		public TValue Value
 		{
-			get { return (TValue)(this.pi != null ? pi.GetValue(data) : data); }
+			get { return (TValue)(this.pi?.GetValue(data) ?? data); }
 			set
 			{
 				if (pi == null)
@@ -94,8 +95,7 @@ namespace Apiary.VM
 			}
 		}
 
-		public PropertyRecord(object data, string caption, PropertyInfo pi = null)
-			: base(data, caption)
+		public PropertyRecord(object data, string caption, PropertyInfo pi = null) : base(data, caption)
 		{
 			this.pi = pi;
 		}

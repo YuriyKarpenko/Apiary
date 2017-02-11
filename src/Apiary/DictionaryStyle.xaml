@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					
-					xmlns:it="clr-namespace:IT;assembly=Apiary.Data"
+					xmlns:it="clr-namespace:IT;assembly=IT"
 					xmlns:it_wpf="clr-namespace:IT.WPF;assembly=IT"
 					xmlns:data="clr-namespace:Apiary.Data;assembly=Apiary.Data"
 					xmlns:data_m="clr-namespace:Apiary.Data.Model;assembly=Apiary.Data"
@@ -72,7 +72,7 @@
 
 	<!--#endregion-->
 
-	<DataTemplate DataType="{x:Type it_wpf:IEnumerableProperty`1}" x:Key="dt_IEnumerableProperty">
+	<DataTemplate DataType="{x:Type it_wpf:SelectorProperty`1}" x:Key="dt_IEnumerableProperty">
 		<v:UC_ListView/>
 	</DataTemplate>
 

@@ -11,9 +11,14 @@ using Apiary.M;
 
 namespace Apiary.VM
 {
-
-	class CM_Property_List
+	interface ICM_Property
 	{
+		bool IsEditMode { get; }
+	}
+
+	class CM_Property_List : ICM_Property
+	{
+		public bool IsEditMode { get; set; }
 		public IPropertyRecord[] List { get; protected set; }
 
 
@@ -23,8 +28,9 @@ namespace Apiary.VM
 		}
 	}
 
-	class CM_Property_Value
+	class CM_Property_Value : ICM_Property
 	{
+		public bool IsEditMode { get; set; }
 		public object Value { get; private set; }
 
 
